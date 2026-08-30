@@ -8,11 +8,11 @@
     body { 
       font-family: sans-serif; 
       text-align: center; 
+      /* 背景画像の設定（タイル状にリピート配置） */
       background-image: url('images.jpg'); 
-      background-size: cover;          
-      background-position: center;     
-      background-attachment: fixed;    
-      background-repeat: no-repeat;
+      background-repeat: repeat;       /* タイル状に繰り返す */
+      background-size: auto;           /* 画像の元のサイズで敷き詰める */
+      background-position: top left;
       margin: 0; 
       padding: 20px 20px 40px 20px; 
       min-height: 100vh; 
@@ -22,11 +22,11 @@
     }
     .content { flex: 1; }
     
-    h1 { color: #333; background: rgba(255, 255, 255, 0.85); display: inline-block; padding: 5px 15px; border-radius: 20px; }
-    p { background: rgba(255, 255, 255, 0.85); display: inline-block; padding: 5px 10px; border-radius: 10px; }
+    h1 { color: #333; background: rgba(255, 255, 255, 0.9); display: inline-block; padding: 5px 15px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    p { background: rgba(255, 255, 255, 0.9); display: inline-block; padding: 5px 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
     .card-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 350px; margin: 20px auto; }
-    .stamp-spot { background: rgba(255, 255, 255, 0.95); border: 2px dashed #ccc; border-radius: 12px; height: 145px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .stamp-spot { background: rgba(255, 255, 255, 0.95); border: 2px dashed #ccc; border-radius: 12px; height: 145px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
     .stamp-spot.active { border: 2px solid #ff6b6b; background: #fff5f5; }
     .stamp-mark { font-size: 40px; color: #ff6b6b; display: none; }
     .stamp-spot.active .stamp-mark { display: block; }
@@ -36,8 +36,8 @@
     
     .status-msg { font-size: 10px; color: #d9534f; margin-top: 5px; font-weight: bold; }
     .reset-btn { background: #6c757d; margin-top: 20px; font-size: 14px; padding: 10px 20px; }
-    #complete-msg { color: #28a745; font-weight: bold; display: none; font-size: 18px; margin-top: 15px; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 10px; }
-    footer { margin-top: 40px; font-size: 13px; color: #333; background: rgba(255, 255, 255, 0.85); padding: 10px; border-radius: 8px; }
+    #complete-msg { color: #28a745; font-weight: bold; display: none; font-size: 18px; margin-top: 15px; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    footer { margin-top: 40px; font-size: 13px; color: #333; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
   </style>
 </head>
 <body>
@@ -59,17 +59,16 @@
   </footer>
 
   <script>
-    // ★スポットごとの設定（日時 + 位置情報）★
-    // lat: 緯度, lng: 経度, radius: 判定エリアの半径(メートル単位)
+    // スポットごとの設定（日時 + 位置情報）
     const spots = [
       { 
         id: 'spot1', 
         name: '商工祭', 
         start: '2026-10-17T09:30:00', 
         end:   '2026-10-18T16:00:00',
-        lat: 38.9288,  // 会場の緯度
-        lng: 141.1351, // 会場の経度
-        radius: 200    // 半径200m以内
+        lat: 38.9288,
+        lng: 141.1351,
+        radius: 200
       },
       { 
         id: 'spot2', 
@@ -102,9 +101,8 @@
 
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
 
-    // 2点間の距離(メートル)を計算する関数 (ヒュベニの公式風)
     function calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371000; // 地球の半径(m)
+      const R = 6371000;
       const dLat = (lat2 - lat1) * Math.PI / 180;
       const dLon = (lon2 - lon1) * Math.PI / 180;
       const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -138,7 +136,6 @@
             buttonHtml = `<button disabled>スタンプ獲得</button>`;
             statusMsg = `<div class="status-msg">※終了しました</div>`;
           } else {
-            // 開催中の場合、位置情報判定付きの獲得ボタン
             buttonHtml = `<button onclick="getStampWithGPS('${spot.id}')">スタンプ獲得</button>`;
           }
         }
@@ -161,7 +158,6 @@
       }
     }
 
-    // GPSの位置情報を取得してスタンプを押す処理
     function getStampWithGPS(id) {
       const spot = spots.find(s => s.id === id);
 
@@ -177,17 +173,14 @@
           const userLat = position.coords.latitude;
           const userLng = position.coords.longitude;
 
-          // 距離判定 (メートル)
           const distance = calculateDistance(userLat, userLng, spot.lat, spot.lng);
 
           if (distance <= spot.radius) {
-            // 範囲内の場合
             collected[id] = true;
             localStorage.setItem('stampData', JSON.stringify(collected));
             alert(`【${spot.name}】のスタンプを獲得しました！`);
             render();
           } else {
-            // 範囲外の場合
             alert(`会場から遠すぎます（現在地から約${Math.round(distance)}m）。\n会場の近く（${spot.radius}m以内）に移動してから押してください。`);
           }
         },
@@ -198,7 +191,6 @@
       );
     }
 
-    // リセット処理
     function resetStamps() {
       if (confirm('スタンプを初期化しますか？')) {
         collected = {};
