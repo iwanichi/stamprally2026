@@ -61,7 +61,7 @@
 
     button { background: #007bff; color: #fff; border: none; padding: 6px 10px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; }
     
-    /* ★コンプリート達成エリアのデザイン★ */
+    /* コンプリート達成エリアのデザイン */
     #complete-box {
       display: none;
       background: #e8f5e9;
@@ -117,14 +117,13 @@
     <h1>デジタルスタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
-    <!-- ★コンプリート時に表示されるエリア★ -->
+    <!-- コンプリート時に表示されるエリア -->
     <div id="complete-box">
       <div class="complete-title">🎉 コンプリートおめでとう！</div>
       <div class="complete-desc">
         全スタンプ達成です！<br>
         この画面をスクリーンショット撮影の上、下記の応募フォームよりご応募ください。
       </div>
-      <!-- フォームができたら href="ここにURL" に変更します -->
       <button class="apply-btn" onclick="openForm()">🎁 景品に応募する</button>
       <div class="code-display">応募確認コード: <span id="userCode">----</span></div>
     </div>
@@ -136,7 +135,7 @@
     <div class="notice-box">
       <span class="notice-title">【ご注意・お願い】</span>
       <ul>
-        <li>イベント終了まで**同じブラウザ（SafariやChrome等）**でアクセスしてください。</li>
+        <li>イベント終了まで<b>同じブラウザ（SafariやChrome等）</b>でアクセスしてください。</li>
         <li>プライベートモード（シークレットモード）ではスタンプが保存されない場合があります。</li>
         <li>ブラウザの履歴・Webデータを消去するとスタンプもリセットされますのでご注意ください。</li>
       </ul>
@@ -158,10 +157,15 @@
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
     let newlyStampedId = null;
 
-    // ユーザー固有の確認用ランダムコード（不正防止用）
+    // パターンA: 日時＋ランダム数字による完全オリジナル発番
     let userCode = localStorage.getItem('userCode');
     if (!userCode) {
-      userCode = 'STAMP-' + Math.floor(1000 + Math.random() * 9000);
+      const now = new Date();
+      const dateStr = (now.getMonth() + 1).toString().padStart(2, '0') + now.getDate().toString().padStart(2, '0');
+      const timeStr = now.getHours().toString().padStart(2, '0') + now.getMinutes().toString().padStart(2, '0') + now.getSeconds().toString().padStart(2, '0');
+      const randStr = Math.floor(100 + Math.random() * 900).toString();
+      
+      userCode = `STAMP-${dateStr}-${timeStr}-${randStr}`;
       localStorage.setItem('userCode', userCode);
     }
 
@@ -191,7 +195,6 @@
         grid.appendChild(card);
       });
 
-      // 全体コンプリート判定
       if (count === spots.length) {
         document.getElementById('complete-box').style.display = 'block';
         document.getElementById('userCode').innerText = userCode;
@@ -209,10 +212,7 @@
       render();
     }
 
-    // 応募ボタンを押した時の動作（仮ダイアログ）
     function openForm() {
-      // フォームURLが決まったら、下の alert を消して以下のように書き換えます
-      // window.location.href = "https://forms.google.com/...";
       alert("【開発用メッセージ】\n応募フォームのURLが設定されると、ここに移動します。\n\n確認コード: " + userCode + "\nこの画面のスクショを撮影してフォームに送ってもらいます。");
     }
 
