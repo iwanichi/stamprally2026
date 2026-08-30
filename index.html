@@ -22,13 +22,40 @@
     h1 { color: #333; margin-bottom: 5px; margin-top: 5px; }
     p { color: #666; margin-top: 0; font-size: 14px; }
 
-    .card-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 350px; margin: 20px auto; }
-    .stamp-spot { background: #fff; border: 2px dashed #ccc; border-radius: 12px; height: 145px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .stamp-spot.active { border: 2px solid #ff6b6b; background: #fff5f5; }
-    .stamp-mark { font-size: 40px; color: #ff6b6b; display: none; }
+    .card-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 350px; margin: 20px auto; justify-items: center; }
+    
+    /* ★丸型のスタンプ枠デザイン★ */
+    .stamp-spot { 
+      background: #fff; 
+      border: 2px dashed #bbb; 
+      border-radius: 50%; /* 完全な正円 */
+      width: 150px; 
+      height: 150px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      position: relative; 
+      padding: 10px; 
+      box-shadow: 0 3px 6px rgba(0,0,0,0.06); 
+      box-sizing: border-box;
+    }
+    .stamp-spot.active { 
+      border: 3px double #ff6b6b; /* スタンプらしい二重線の枠 */
+      background: #fff8f8; 
+    }
+    
+    .spot-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 2px;
+    }
+
+    .stamp-mark { font-size: 42px; color: #ff6b6b; font-weight: bold; display: none; line-height: 1; margin: 5px 0; }
     .stamp-spot.active .stamp-mark { display: block; }
     
-    /* ★スタンプを押した時の「一回ドカンとでかくなる」アニメーション★ */
+    /* スタンプを押した時の巨大化アニメーション */
     .stamp-spot.active .stamp-mark.pop-anim {
       animation: stampGrow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -36,24 +63,24 @@
     @keyframes stampGrow {
       0% {
         opacity: 0;
-        transform: scale(0.2) rotate(-20deg); /* 小さく現れる */
+        transform: scale(0.2) rotate(-20deg);
       }
       50% {
-        transform: scale(2.2) rotate(10deg);  /* ドカンと超巨大化！ */
+        transform: scale(2.2) rotate(10deg);
       }
       75% {
-        transform: scale(0.85) rotate(-5deg); /* 反動で一旦ちょっと縮む */
+        transform: scale(0.85) rotate(-5deg);
       }
       100% {
         opacity: 1;
-        transform: scale(1) rotate(0deg);     /* 定位置にピタッと収まる */
+        transform: scale(1) rotate(0deg);
       }
     }
 
-    button { background: #007bff; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-top: 8px; cursor: pointer; }
+    button { background: #007bff; color: #fff; border: none; padding: 6px 10px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; }
     button:disabled { background: #ccc; cursor: not-allowed; }
     
-    .reset-btn { background: #6c757d; margin-top: 20px; font-size: 14px; padding: 10px 20px; }
+    .reset-btn { background: #6c757d; color: #fff; border: none; border-radius: 6px; margin-top: 20px; font-size: 14px; padding: 10px 20px; cursor: pointer; }
     #complete-msg { color: #28a745; font-weight: bold; display: none; font-size: 18px; margin-top: 15px; }
     
     .notice-box { 
@@ -133,7 +160,7 @@
         const card = document.createElement('div');
         card.className = `stamp-spot ${isStamped ? 'active' : ''}`;
         card.innerHTML = `
-          <strong>${spot.name}</strong>
+          <div class="spot-title">${spot.name}</div>
           <span class="stamp-mark ${animClass}">済</span>
           ${buttonHtml}
         `;
