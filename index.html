@@ -86,12 +86,23 @@
       background: #e8f5e9;
       border: 2px solid #28a745;
       border-radius: 12px;
-      padding: 15px;
+      padding: 15px 10px; /* パディング調整 */
       max-width: 350px;
       margin: 20px auto 10px auto;
       box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      box-sizing: border-box;
     }
-    .complete-title { color: #28a745; font-weight: bold; font-size: 18px; margin-bottom: 8px; }
+    
+    /* ★文字サイズを小さく調整して1行に収まるように変更★ */
+    .complete-title { 
+      color: #28a745; 
+      font-weight: bold; 
+      font-size: 15px; /* 18pxから15pxに小さく */
+      margin-bottom: 8px; 
+      white-space: nowrap; /* 折り返しを防止 */
+      letter-spacing: -0.5px; /* 少し字間を詰める */
+    }
+    
     .complete-desc { font-size: 12px; color: #333; line-height: 1.4; margin-bottom: 12px; }
     .apply-btn { 
       background: #28a745; 
@@ -137,7 +148,6 @@
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
     <div id="complete-box">
-      <!-- ★メッセージを丁寧語に変更★ -->
       <div class="complete-title">🎉 コンプリートおめでとうございます！</div>
       <div class="complete-desc">
         全スタンプ達成です！<br>
