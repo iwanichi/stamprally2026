@@ -8,7 +8,7 @@
     body { font-family: sans-serif; text-align: center; background: #f4f4f9; margin: 0; padding: 20px; }
     h1 { color: #333; }
     .card-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 350px; margin: 20px auto; }
-    .stamp-spot { background: #fff; border: 2px dashed #ccc; border-radius: 12px; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+    .stamp-spot { background: #fff; border: 2px dashed #ccc; border-radius: 12px; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
     .stamp-spot.active { border: 2px solid #ff6b6b; background: #fff5f5; }
     .stamp-mark { font-size: 40px; color: #ff6b6b; display: none; }
     .stamp-spot.active .stamp-mark { display: block; }
@@ -20,7 +20,7 @@
 <body>
 
   <h1>デジタルスタンプラリー</h1>
-  <p>各スポットのボタンを押してスタンプを集めよう！</p>
+  <p>各会場のボタンを押してスタンプを集めよう！</p>
 
   <div id="complete-msg">🎉 コンプリートおめでとう！</div>
 
@@ -29,12 +29,12 @@
   <button class="reset-btn" onclick="resetStamps()">リセットする</button>
 
   <script>
-    // スポット一覧の設定
+    // スポット一覧の設定（名称を変更）
     const spots = [
-      { id: 'spot1', name: 'スポット A' },
-      { id: 'spot2', name: 'スポット B' },
-      { id: 'spot3', name: 'スポット C' },
-      { id: 'spot4', name: 'スポット D' }
+      { id: 'spot1', name: '商工祭' },
+      { id: 'spot2', name: '農業祭' },
+      { id: 'spot3', name: '福の市' },
+      { id: 'spot4', name: '住宅際' }
     ];
 
     // 保存データの取得
