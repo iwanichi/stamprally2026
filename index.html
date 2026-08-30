@@ -15,6 +15,7 @@
       box-sizing: border-box; 
       display: flex; 
       flex-direction: column; 
+      overflow-x: hidden; /* 画面からはみ出た際のエラー用横スクロールを防ぐ */
     }
     .content { flex: 1; }
     
@@ -48,20 +49,38 @@
     .stamp-mark { font-size: 42px; color: #ff6b6b; font-weight: bold; display: none; line-height: 1; margin: 5px 0; }
     .stamp-spot.active .stamp-mark { display: block; }
     
-    /* アニメーション */
+    /* ★巨大化 ＋ 着地バウンドアニメーション★ */
     .stamp-spot.active .stamp-mark.pop-anim {
-      animation: stampGrow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: stampMegaBounce 0.7s ease-out;
+      z-index: 999;
     }
-    @keyframes stampGrow {
-      0% { opacity: 0; transform: scale(0.2) rotate(-20deg); }
-      50% { transform: scale(2.2) rotate(10deg); }
-      75% { transform: scale(0.85) rotate(-5deg); }
-      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+
+    @keyframes stampMegaBounce {
+      0% {
+        opacity: 0;
+        transform: scale(0.1) rotate(-30deg);
+      }
+      40% {
+        opacity: 0.95;
+        transform: scale(4.5) rotate(12deg); /* ドンと超巨大化 */
+      }
+      65% {
+        transform: scale(0.85) rotate(-5deg); /* 着地して少し縮む */
+      }
+      78% {
+        transform: scale(1.18) rotate(3deg);  /* 1回目のポンッ（弾み） */
+      }
+      88% {
+        transform: scale(0.95) rotate(-1deg); /* 2回目のプチ弾み */
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);    /* ピタッと着地 */
+      }
     }
 
     button { background: #007bff; color: #fff; border: none; padding: 6px 10px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; }
     
-    /* コンプリート達成エリアのデザイン */
     #complete-box {
       display: none;
       background: #e8f5e9;
@@ -117,7 +136,6 @@
     <h1>デジタルスタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
-    <!-- コンプリート時に表示されるエリア -->
     <div id="complete-box">
       <div class="complete-title">🎉 コンプリートおめでとう！</div>
       <div class="complete-desc">
@@ -157,7 +175,6 @@
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
     let newlyStampedId = null;
 
-    // パターンA: 日時＋ランダム数字による完全オリジナル発番
     let userCode = localStorage.getItem('userCode');
     if (!userCode) {
       const now = new Date();
