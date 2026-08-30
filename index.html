@@ -8,11 +8,7 @@
     body { 
       font-family: sans-serif; 
       text-align: center; 
-      /* 背景画像の設定（タイル状にリピート配置） */
-      background-image: url('images.jpg'); 
-      background-repeat: repeat;       /* タイル状に繰り返す */
-      background-size: auto;           /* 画像の元のサイズで敷き詰める */
-      background-position: top left;
+      background-color: #f4f6f8; /* シンプルなマット背景色 */
       margin: 0; 
       padding: 20px 20px 40px 20px; 
       min-height: 100vh; 
@@ -22,11 +18,11 @@
     }
     .content { flex: 1; }
     
-    h1 { color: #333; background: rgba(255, 255, 255, 0.9); display: inline-block; padding: 5px 15px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    p { background: rgba(255, 255, 255, 0.9); display: inline-block; padding: 5px 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    h1 { color: #333; margin-bottom: 5px; }
+    p { color: #666; margin-top: 0; font-size: 14px; }
 
     .card-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 350px; margin: 20px auto; }
-    .stamp-spot { background: rgba(255, 255, 255, 0.95); border: 2px dashed #ccc; border-radius: 12px; height: 145px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+    .stamp-spot { background: #fff; border: 2px dashed #ccc; border-radius: 12px; height: 145px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .stamp-spot.active { border: 2px solid #ff6b6b; background: #fff5f5; }
     .stamp-mark { font-size: 40px; color: #ff6b6b; display: none; }
     .stamp-spot.active .stamp-mark { display: block; }
@@ -36,15 +32,14 @@
     
     .status-msg { font-size: 10px; color: #d9534f; margin-top: 5px; font-weight: bold; }
     .reset-btn { background: #6c757d; margin-top: 20px; font-size: 14px; padding: 10px 20px; }
-    #complete-msg { color: #28a745; font-weight: bold; display: none; font-size: 18px; margin-top: 15px; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    footer { margin-top: 40px; font-size: 13px; color: #333; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    #complete-msg { color: #28a745; font-weight: bold; display: none; font-size: 18px; margin-top: 15px; }
+    footer { margin-top: 40px; font-size: 13px; color: #666; }
   </style>
 </head>
 <body>
 
   <div class="content">
     <h1>デジタルスタンプラリー</h1>
-    <br>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
     <div id="complete-msg">🎉 コンプリートおめでとう！</div>
@@ -90,7 +85,7 @@
       },
       { 
         id: 'spot4', 
-        name: '住宅祭', // 「住宅祭」に修正
+        name: '住宅祭', 
         start: '2026-10-17T10:00:00', 
         end:   '2026-10-18T17:00:00',
         lat: 38.9300, 
