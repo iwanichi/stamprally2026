@@ -28,22 +28,25 @@
     .stamp-mark { font-size: 40px; color: #ff6b6b; display: none; }
     .stamp-spot.active .stamp-mark { display: block; }
     
-    /* ★スタンプを押した時のポンッ！とするアニメーション★ */
+    /* ★スタンプを押した時の「一回ドカンとでかくなる」アニメーション★ */
     .stamp-spot.active .stamp-mark.pop-anim {
-      animation: stampPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: stampGrow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    @keyframes stampPop {
+    @keyframes stampGrow {
       0% {
         opacity: 0;
-        transform: scale(3) rotate(-15deg); /* 上から大きく傾いて降ってくる */
+        transform: scale(0.2) rotate(-20deg); /* 小さく現れる */
       }
-      70% {
-        transform: scale(0.9) rotate(5deg);  /* 一旦少し縮む */
+      50% {
+        transform: scale(2.2) rotate(10deg);  /* ドカンと超巨大化！ */
+      }
+      75% {
+        transform: scale(0.85) rotate(-5deg); /* 反動で一旦ちょっと縮む */
       }
       100% {
         opacity: 1;
-        transform: scale(1) rotate(0deg);   /* 定位置にピッタリ収まる */
+        transform: scale(1) rotate(0deg);     /* 定位置にピタッと収まる */
       }
     }
 
@@ -109,7 +112,7 @@
     ];
 
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
-    let newlyStampedId = null; // 直前に押されたスタンプのIDを記録する変数
+    let newlyStampedId = null;
 
     function render() {
       const grid = document.getElementById('stampGrid');
@@ -125,7 +128,6 @@
           buttonHtml = `<button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>`;
         }
 
-        // 今回押されたスタンプの場合のみアニメーション用クラスを追加
         const animClass = (spot.id === newlyStampedId) ? 'pop-anim' : '';
 
         const card = document.createElement('div');
@@ -144,12 +146,11 @@
         document.getElementById('complete-msg').style.display = 'none';
       }
 
-      // アニメーション完了後に状態をクリア
       newlyStampedId = null;
     }
 
     function getStampTest(id) {
-      newlyStampedId = id; // アニメーション対象としてIDを保存
+      newlyStampedId = id;
       collected[id] = true;
       localStorage.setItem('stampData', JSON.stringify(collected));
       render();
