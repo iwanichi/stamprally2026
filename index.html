@@ -15,7 +15,7 @@
       box-sizing: border-box; 
       display: flex; 
       flex-direction: column; 
-      overflow-x: hidden; /* 画面からはみ出た際のエラー用横スクロールを防ぐ */
+      overflow-x: hidden; 
     }
     .content { flex: 1; }
     
@@ -49,7 +49,7 @@
     .stamp-mark { font-size: 42px; color: #ff6b6b; font-weight: bold; display: none; line-height: 1; margin: 5px 0; }
     .stamp-spot.active .stamp-mark { display: block; }
     
-    /* ★巨大化 ＋ 着地バウンドアニメーション★ */
+    /* 巨大化 ＋ 着地バウンドアニメーション */
     .stamp-spot.active .stamp-mark.pop-anim {
       animation: stampMegaBounce 0.7s ease-out;
       z-index: 999;
@@ -62,20 +62,20 @@
       }
       40% {
         opacity: 0.95;
-        transform: scale(4.5) rotate(12deg); /* ドンと超巨大化 */
+        transform: scale(4.5) rotate(12deg);
       }
       65% {
-        transform: scale(0.85) rotate(-5deg); /* 着地して少し縮む */
+        transform: scale(0.85) rotate(-5deg);
       }
       78% {
-        transform: scale(1.18) rotate(3deg);  /* 1回目のポンッ（弾み） */
+        transform: scale(1.18) rotate(3deg);
       }
       88% {
-        transform: scale(0.95) rotate(-1deg); /* 2回目のプチ弾み */
+        transform: scale(0.95) rotate(-1deg);
       }
       100% {
         opacity: 1;
-        transform: scale(1) rotate(0deg);    /* ピタッと着地 */
+        transform: scale(1) rotate(0deg);
       }
     }
 
@@ -137,7 +137,8 @@
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
     <div id="complete-box">
-      <div class="complete-title">🎉 コンプリートおめでとう！</div>
+      <!-- ★メッセージを丁寧語に変更★ -->
+      <div class="complete-title">🎉 コンプリートおめでとうございます！</div>
       <div class="complete-desc">
         全スタンプ達成です！<br>
         この画面をスクリーンショット撮影の上、下記の応募フォームよりご応募ください。
