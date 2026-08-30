@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>スタンプラリー</title>
+  <title>スタンプラリー（テストモード）</title>
   <style>
     body { 
       font-family: sans-serif; 
       text-align: center; 
-      background-color: #f4f6f8; /* シンプルなマット背景色 */
+      background-color: #f4f6f8; 
       margin: 0; 
       padding: 20px 20px 40px 20px; 
       min-height: 100vh; 
@@ -18,7 +18,8 @@
     }
     .content { flex: 1; }
     
-    h1 { color: #333; margin-bottom: 5px; }
+    .test-badge { background: #ffc107; color: #333; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
+    h1 { color: #333; margin-bottom: 5px; margin-top: 5px; }
     p { color: #666; margin-top: 0; font-size: 14px; }
 
     .card-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 350px; margin: 20px auto; }
@@ -30,7 +31,7 @@
     button { background: #007bff; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-top: 8px; cursor: pointer; }
     button:disabled { background: #ccc; cursor: not-allowed; }
     
-    .status-msg { font-size: 10px; color: #d9534f; margin-top: 5px; font-weight: bold; }
+    .status-msg { font-size: 10px; color: #28a745; margin-top: 5px; font-weight: bold; }
     .reset-btn { background: #6c757d; margin-top: 20px; font-size: 14px; padding: 10px 20px; }
     #complete-msg { color: #28a745; font-weight: bold; display: none; font-size: 18px; margin-top: 15px; }
     footer { margin-top: 40px; font-size: 13px; color: #666; }
@@ -39,6 +40,7 @@
 <body>
 
   <div class="content">
+    <div class="test-badge">⚠️ テストモード動作中（判定スキップ）</div>
     <h1>デジタルスタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
@@ -54,85 +56,29 @@
   </footer>
 
   <script>
-    // スポットごとの設定（日時 + 位置情報）
+    // スポットごとの設定
     const spots = [
-      { 
-        id: 'spot1', 
-        name: '商工祭', 
-        start: '2026-10-17T09:30:00', 
-        end:   '2026-10-18T16:00:00',
-        lat: 38.9288,
-        lng: 141.1351,
-        radius: 200
-      },
-      { 
-        id: 'spot2', 
-        name: '農業祭', 
-        start: '2026-10-17T09:00:00', 
-        end:   '2026-10-18T15:30:00',
-        lat: 38.9290, 
-        lng: 141.1360, 
-        radius: 200
-      },
-      { 
-        id: 'spot3', 
-        name: '福の市', 
-        start: '2026-10-17T10:00:00', 
-        end:   '2026-10-18T16:00:00',
-        lat: 38.9275, 
-        lng: 141.1340, 
-        radius: 200
-      },
-      { 
-        id: 'spot4', 
-        name: '住宅祭', 
-        start: '2026-10-17T10:00:00', 
-        end:   '2026-10-18T17:00:00',
-        lat: 38.9300, 
-        lng: 141.1370, 
-        radius: 200
-      }
+      { id: 'spot1', name: '商工祭' },
+      { id: 'spot2', name: '農業祭' },
+      { id: 'spot3', name: '福の市' },
+      { id: 'spot4', name: '住宅祭' }
     ];
 
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
-
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371000;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
 
     function render() {
       const grid = document.getElementById('stampGrid');
       grid.innerHTML = '';
       let count = 0;
-      const now = new Date();
 
       spots.forEach(spot => {
         const isStamped = !!collected[spot.id];
         if (isStamped) count++;
 
-        const startTime = new Date(spot.start);
-        const endTime = new Date(spot.end);
-        
         let buttonHtml = '';
-        let statusMsg = '';
-
         if (!isStamped) {
-          if (now < startTime) {
-            buttonHtml = `<button disabled>スタンプ獲得</button>`;
-            statusMsg = `<div class="status-msg">※開催前です</div>`;
-          } else if (now > endTime) {
-            buttonHtml = `<button disabled>スタンプ獲得</button>`;
-            statusMsg = `<div class="status-msg">※終了しました</div>`;
-          } else {
-            buttonHtml = `<button onclick="getStampWithGPS('${spot.id}')">スタンプ獲得</button>`;
-          }
+          // テストモードのため常に押せるボタンを設置
+          buttonHtml = `<button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>`;
         }
 
         const card = document.createElement('div');
@@ -141,7 +87,6 @@
           <strong>${spot.name}</strong>
           <span class="stamp-mark">済</span>
           ${buttonHtml}
-          ${statusMsg}
         `;
         grid.appendChild(card);
       });
@@ -153,37 +98,13 @@
       }
     }
 
-    function getStampWithGPS(id) {
+    // テスト用のスタンプ獲得処理（GPS・日時判定なし）
+    function getStampTest(id) {
       const spot = spots.find(s => s.id === id);
-
-      if (!navigator.geolocation) {
-        alert('お使いの端末・ブラウザは位置情報に対応していません。');
-        return;
-      }
-
-      alert('位置情報を取得します...');
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
-
-          const distance = calculateDistance(userLat, userLng, spot.lat, spot.lng);
-
-          if (distance <= spot.radius) {
-            collected[id] = true;
-            localStorage.setItem('stampData', JSON.stringify(collected));
-            alert(`【${spot.name}】のスタンプを獲得しました！`);
-            render();
-          } else {
-            alert(`会場から遠すぎます（現在地から約${Math.round(distance)}m）。\n会場の近く（${spot.radius}m以内）に移動してから押してください。`);
-          }
-        },
-        (error) => {
-          alert('位置情報の取得に失敗しました。スマホの位置情報(GPS)利用を許可してください。');
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
+      collected[id] = true;
+      localStorage.setItem('stampData', JSON.stringify(collected));
+      alert(`【${spot.name}】のスタンプを獲得しました！（テスト動作）`);
+      render();
     }
 
     function resetStamps() {
