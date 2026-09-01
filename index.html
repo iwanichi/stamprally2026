@@ -129,7 +129,7 @@
       justify-content: center; 
     } 
     
-    /* 未獲得時の丸い台紙枠 */
+    /* 丸い台紙枠（共通） */
     .stamp-spot { 
       background: rgba(255, 248, 240, 0.95); 
       border: 3px dashed #e67e22; 
@@ -144,6 +144,7 @@
       padding: 8px; 
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
       box-sizing: border-box;
+      overflow: hidden; /* 画像が円からはみ出ないように設定 */
     }
 
     .spot-title { 
@@ -152,19 +153,18 @@
       margin-bottom: 4px; 
     } 
 
-    /* ★画像指定があるスタンプを獲得した時：背景枠や文字を消して画像だけを表示★ */
+    /* 画像ロゴ用（獲得後に白い円の中に綺麗に収める設定） */
     .stamp-spot.active.has-image { 
-      border: none; 
-      background: transparent; 
-      box-shadow: none;
+      border: 3px solid #ffffff; /* 獲得後は白い綺麗な実線枠に */
+      background: #ffffff;      /* 背景を完全な白にしてロゴを円形に見せる */
       padding: 0;
     }
 
-    /* 画像がある場合のスタンプ画像本体（155pxサイズ） */
     .stamp-img {
-      width: 155px;
-      height: 155px;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* 円全体に綺麗にフィット */
+      border-radius: 50%;
     }
 
     /* 画像指定がない（住宅祭など）獲得時の「済」文字 */
@@ -206,7 +206,7 @@
       }
     }
 
-    /* スタンプ下・リセットボタン上に配置したGPS案内バナー */
+    /* GPS案内バナー */
     .gps-notice-banner {
       background: #fff3cd;
       color: #856404;
@@ -372,7 +372,7 @@
     <!-- リセットボタン -->
     <button class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
 
-    <!-- ★ご注意・免責事項★ -->
+    <!-- ご注意・免責事項 -->
     <div class="notice-box">
       <span class="notice-title">【ご注意・免責事項】</span>
       <ul>
@@ -425,13 +425,13 @@
 
         if (isStamped) {
           if (spot.image) {
-            card.className = `stamp-spot active has-image`;
-            card.innerHTML = `<img src="${spot.image}" class="stamp-img ${animClass}" alt="${spot.name}">`;
+            card.className = `stamp-spot active has-image ${animClass}`;
+            card.innerHTML = `<img src="${spot.image}" class="stamp-img" alt="${spot.name}">`;
           } else {
-            card.className = `stamp-spot active`;
+            card.className = `stamp-spot active ${animClass}`;
             card.innerHTML = `
               <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
-              <span class="stamp-mark ${animClass}">済</span>
+              <span class="stamp-mark">済</span>
             `;
           }
         } else {
