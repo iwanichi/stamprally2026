@@ -9,14 +9,14 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* ★ハロウィーン風の落ち着いた背景設定★ */
+    /* ★ハロウィーン風の「薄い茶系・暖色グラデーション」設定★ */
     body { 
       font-family: sans-serif; 
       text-align: center; 
-      /* ダークパープル〜ネイビーのシックな夜空風グラデーション */
-      background: linear-gradient(135deg, #1e1b2e 0%, #2a1f3d 50%, #171326 100%);
+      /* 薄いブラウン・マロンベージュから温かみのあるテラコッタ系の落ち着いた背景 */
+      background: linear-gradient(135deg, #f4ece1 0%, #e8d5c4 50%, #d8beaa 100%);
       background-attachment: fixed;
-      color: #f0f0f0;
+      color: #4a3b32;
       margin: 0; 
       padding: 20px 20px 40px 20px; 
       min-height: 100vh; 
@@ -27,7 +27,7 @@
       position: relative;
     }
 
-    /* ★控えめなハロウィーンのバックグラウンドイラスト（透過SVG）★ */
+    /* ★かぼちゃ（ジャック・オー・ランタン）のシルエッパターン（透過SVG）★ */
     body::before {
       content: "";
       position: fixed;
@@ -37,10 +37,11 @@
       height: 100%;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.12; /* 主張しすぎないうっすらとした透過度 */
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100"><circle cx="25" cy="25" r="12" fill="%23fff"/><path d="M10 80 Q20 70 30 80 Q40 70 50 80 Q50 95 30 95 Q10 95 10 80 Z" fill="%23ff9800"/><path d="M70 30 Q75 25 80 30 Q85 20 90 30 Q80 35 70 30 Z" fill="%23fff"/><path d="M15 40 Q20 35 25 40 Q30 30 35 40 Q25 45 15 40 Z" fill="%23fff"/></svg>');
+      opacity: 0.15; /* かぼちゃが主張しすぎず、しっかり見える絶妙な濃さ */
+      /* かぼちゃシルエットの連続模様 */
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 100 100"><g fill="%238c531b"><path d="M50 15 C45 10 40 10 42 3 L52 3 C50 8 53 10 50 15 Z"/><path d="M50 20 C20 20 10 38 10 55 C10 75 25 85 50 85 C75 85 90 75 90 55 C90 38 80 20 50 20 Z"/><polygon points="32,42 42,48 28,52"/><polygon points="68,42 72,52 58,48"/><polygon points="50,52 55,58 45,58"/><path d="M28,68 Q50,82 72,68 Q62,76 50,73 Q38,76 28,68 Z"/></g></svg>');
       background-repeat: repeat;
-      background-size: 220px 220px;
+      background-size: 90px 90px;
     }
 
     .content { 
@@ -49,16 +50,16 @@
       z-index: 1; 
     }
     
-    .test-badge { background: #ffc107; color: #333; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
-    h1 { color: #ffffff; margin-bottom: 5px; margin-top: 5px; font-size: 20px; line-height: 1.3; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    p { color: #d0c8e0; margin-top: 5px; font-size: 14px; }
+    .test-badge { background: #e67e22; color: #fff; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
+    h1 { color: #3d2b1f; margin-bottom: 5px; margin-top: 5px; font-size: 20px; line-height: 1.3; }
+    p { color: #6b5344; margin-top: 5px; font-size: 14px; }
 
     /* 3つのカードを綺麗に並べるレイアウト */
     .card-container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 360px; margin: 20px auto; justify-items: center; justify-content: center; }
     
     .stamp-spot { 
-      background: rgba(255, 255, 255, 0.95); 
-      border: 2px dashed #9b8ab8; 
+      background: rgba(255, 255, 255, 0.92); 
+      border: 2px dashed #b8977e; 
       border-radius: 50%; 
       width: 155px; 
       height: 155px; 
@@ -68,17 +69,17 @@
       justify-content: center; 
       position: relative; 
       padding: 8px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+      box-shadow: 0 4px 10px rgba(90, 60, 40, 0.08); 
       box-sizing: border-box;
     }
     .stamp-spot.active { 
-      border: 3px double #ff6b6b; 
-      background: #fff8f8; 
+      border: 3px double #d35400; 
+      background: #fffaf5; 
     }
     
-    .spot-title { font-size: 22px; font-weight: bold; color: #222; margin-bottom: 2px; }
+    .spot-title { font-size: 22px; font-weight: bold; color: #3d2b1f; margin-bottom: 2px; }
     
-    .stamp-mark { font-size: 38px; color: #ff6b6b; font-weight: bold; display: none; line-height: 1; margin: 2px 0; }
+    .stamp-mark { font-size: 38px; color: #d35400; font-weight: bold; display: none; line-height: 1; margin: 2px 0; }
     .stamp-spot.active .stamp-mark { display: block; }
     
     /* 巨大化 ＋ 着地バウンドアニメーション */
@@ -111,22 +112,22 @@
       }
     }
 
-    button { background: #ff9800; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; font-weight: bold; }
+    button { background: #d35400; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; font-weight: bold; }
     
     #complete-box {
       display: none;
       background: #ffffff;
-      border: 2px solid #28a745;
+      border: 2px solid #27ae60;
       border-radius: 12px;
       padding: 15px 10px;
       max-width: 350px;
       margin: 20px auto 10px auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       box-sizing: border-box;
     }
     
     .complete-title { 
-      color: #28a745; 
+      color: #27ae60; 
       font-weight: bold; 
       font-size: 16px; 
       margin-bottom: 8px; 
@@ -136,7 +137,7 @@
     
     .complete-desc { font-size: 12px; color: #333; line-height: 1.4; margin-bottom: 12px; }
     .apply-btn { 
-      background: #28a745; 
+      background: #27ae60; 
       color: white; 
       font-size: 15px; 
       font-weight: bold; 
@@ -145,30 +146,30 @@
       border: none; 
       cursor: pointer; 
       width: 80%;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     }
     .code-display { font-size: 11px; color: #666; margin-top: 8px; font-family: monospace; }
 
-    .reset-btn { background: #5a4b75; color: #fff; border: none; border-radius: 6px; margin-top: 20px; font-size: 12px; padding: 8px 16px; cursor: pointer; }
+    .reset-btn { background: #8c7b70; color: #fff; border: none; border-radius: 6px; margin-top: 20px; font-size: 12px; padding: 8px 16px; cursor: pointer; }
     
     .notice-box { 
       margin: 30px auto 10px auto; 
       max-width: 350px; 
-      background: rgba(255, 255, 255, 0.95); 
-      border: 1px solid #d0c8e0; 
+      background: rgba(255, 255, 255, 0.9); 
+      border: 1px solid #d8c2b0; 
       border-radius: 8px; 
       padding: 12px 15px; 
       text-align: left; 
       font-size: 11px; 
-      color: #444; 
+      color: #554438; 
       line-height: 1.5; 
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
-    .notice-title { font-weight: bold; color: #222; margin-bottom: 5px; display: block; }
+    .notice-title { font-weight: bold; color: #3d2b1f; margin-bottom: 5px; display: block; }
     .notice-box ul { margin: 0; padding-left: 18px; }
     .notice-box li { margin-bottom: 3px; }
 
-    footer { margin-top: 20px; font-size: 13px; color: #b0a5c5; relative; z-index: 1; }
+    footer { margin-top: 20px; font-size: 13px; color: #7a685a; relative; z-index: 1; }
   </style>
 </head>
 <body>
@@ -280,8 +281,8 @@
           });
         }
 
-        /* ハロウィーンに合わせた「オレンジ・紫・ゴールド・ホワイト」の紙吹雪カラー */
-        const hwColors = ['#ff9800', '#9c27b0', '#ffd700', '#ffffff'];
+        /* ハロウィーン・秋らしいパンプキンオレンジとゴールド等の紙吹雪カラー */
+        const hwColors = ['#e67e22', '#d35400', '#f1c40f', '#8e44ad', '#ffffff'];
 
         fire(0.25, { spread: 26, startVelocity: 55, colors: hwColors });
         fire(0.2, { spread: 60, colors: hwColors });
