@@ -9,11 +9,11 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* 夕焼け〜木目調グラデーション背景 */
+    /* 画像（jack.jpg）の世界観を活かしたダークブラウン＆ゴールドのグラデーション背景 */
     body { 
       font-family: sans-serif; 
       text-align: center; 
-      background: radial-gradient(circle at 50% 15%, #ffd269 0%, #ff8c00 25%, #8b3a00 50%, #2b1704 85%);
+      background: #2b1704 url('jack.jpg') no-repeat center top / cover;
       background-attachment: fixed;
       color: #ffffff;
       margin: 0; 
@@ -26,7 +26,7 @@
       position: relative;
     }
 
-    /* シルエット・光の演出 */
+    /* 背景画像を少し見やすくするための暗めオーバーレイ（文字可読性UP） */
     body::before {
       content: "";
       position: fixed;
@@ -34,12 +34,9 @@
       left: 0;
       width: 100%;
       height: 100%;
+      background: rgba(20, 10, 2, 0.45);
       pointer-events: none;
       z-index: 0;
-      opacity: 0.18;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="%23ffffff" opacity="0.3"/><path d="M20 30 Q25 25 30 30 Q35 20 40 30 Q30 35 20 30 Z" fill="%23000"/><path d="M60 70 Q65 65 70 70 Q75 60 80 70 Q70 75 60 70 Z" fill="%23000"/></svg>');
-      background-repeat: repeat;
-      background-size: 180px 180px;
     }
 
     .content { 
@@ -48,15 +45,48 @@
       z-index: 1; 
     }
     
-    .test-badge { background: #ffc107; color: #2b1704; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    h1 { color: #ffffff; margin-bottom: 5px; margin-top: 5px; font-size: 20px; line-height: 1.3; text-shadow: 0 2px 6px rgba(0,0,0,0.7); }
-    p { color: #ffe6c2; margin-top: 5px; font-size: 14px; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+    .test-badge { 
+      background: #ffb703; 
+      color: #2b1704; 
+      font-size: 12px; 
+      font-weight: bold; 
+      padding: 4px 10px; 
+      border-radius: 4px; 
+      display: inline-block; 
+      margin-bottom: 10px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
+    }
 
-    .card-container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 360px; margin: 20px auto; justify-items: center; justify-content: center; }
+    h1 { 
+      color: #ffffff; 
+      margin-bottom: 5px; 
+      margin-top: 5px; 
+      font-size: 20px; 
+      line-height: 1.3; 
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8); 
+    }
+
+    p { 
+      color: #ffd166; 
+      margin-top: 5px; 
+      font-size: 14px; 
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8); 
+    }
+
+    .card-container { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 15px; 
+      max-width: 360px; 
+      margin: 20px auto; 
+      justify-items: center; 
+      justify-content: center; 
+    }
     
+    /* 台紙枠：画像に合わせたシックな丸枠 */
     .stamp-spot { 
-      background: rgba(255, 252, 245, 0.95); 
-      border: 3px dashed #8b3a00; 
+      background: rgba(255, 248, 240, 0.92); 
+      border: 3px dashed #e67e22; 
       border-radius: 50%; 
       width: 155px; 
       height: 155px; 
@@ -66,18 +96,35 @@
       justify-content: center; 
       position: relative; 
       padding: 8px; 
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); 
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); 
       box-sizing: border-box;
+      backdrop-filter: blur(2px);
     }
+
     .stamp-spot.active { 
       border: 3px double #d35400; 
-      background: #fff8f0; 
+      background: #ffffff; 
     }
     
-    .spot-title { font-size: 22px; font-weight: bold; color: #2b1704; margin-bottom: 2px; }
+    .spot-title { 
+      font-size: 22px; 
+      font-weight: bold; 
+      color: #2b1704; 
+      margin-bottom: 2px; 
+    }
     
-    .stamp-mark { font-size: 38px; color: #d35400; font-weight: bold; display: none; line-height: 1; margin: 2px 0; }
-    .stamp-spot.active .stamp-mark { display: block; }
+    .stamp-mark { 
+      font-size: 38px; 
+      color: #d35400; 
+      font-weight: bold; 
+      display: none; 
+      line-height: 1; 
+      margin: 2px 0; 
+    }
+
+    .stamp-spot.active .stamp-mark { 
+      display: block; 
+    }
     
     /* 巨大化 ＋ 着地バウンドアニメーション */
     .stamp-spot.active .stamp-mark.pop-anim {
@@ -109,7 +156,18 @@
       }
     }
 
-    button { background: #d35400; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    button { 
+      background: #f39c12; 
+      color: #2b1704; 
+      border: none; 
+      padding: 6px 12px; 
+      border-radius: 15px; 
+      font-size: 11px; 
+      margin-top: 4px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4); 
+    }
     
     #complete-box {
       display: none;
@@ -119,7 +177,7 @@
       padding: 15px 10px;
       max-width: 350px;
       margin: 20px auto 10px auto;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
       box-sizing: border-box;
     }
     
@@ -132,7 +190,13 @@
       letter-spacing: -0.5px; 
     }
     
-    .complete-desc { font-size: 12px; color: #333; line-height: 1.4; margin-bottom: 12px; }
+    .complete-desc { 
+      font-size: 12px; 
+      color: #333; 
+      line-height: 1.4; 
+      margin-bottom: 12px; 
+    }
+
     .apply-btn { 
       background: #27ae60; 
       color: white; 
@@ -145,14 +209,29 @@
       width: 80%;
       box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
-    .code-display { font-size: 11px; color: #666; margin-top: 8px; font-family: monospace; }
 
-    .reset-btn { background: rgba(0, 0, 0, 0.4); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; margin-top: 20px; font-size: 12px; padding: 8px 16px; cursor: pointer; }
+    .code-display { 
+      font-size: 11px; 
+      color: #666; 
+      margin-top: 8px; 
+      font-family: monospace; 
+    }
+
+    .reset-btn { 
+      background: rgba(0, 0, 0, 0.5); 
+      color: #ffe6c2; 
+      border: 1px solid rgba(255, 255, 255, 0.3); 
+      border-radius: 6px; 
+      margin-top: 20px; 
+      font-size: 12px; 
+      padding: 8px 16px; 
+      cursor: pointer; 
+    }
     
     .notice-box { 
       margin: 30px auto 10px auto; 
       max-width: 350px; 
-      background: rgba(255, 252, 245, 0.95); 
+      background: rgba(255, 252, 245, 0.92); 
       border: 1px solid #d8c2b0; 
       border-radius: 8px; 
       padding: 12px 15px; 
@@ -160,13 +239,33 @@
       font-size: 11px; 
       color: #4a2c11; 
       line-height: 1.5; 
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
-    .notice-title { font-weight: bold; color: #2b1704; margin-bottom: 5px; display: block; }
-    .notice-box ul { margin: 0; padding-left: 18px; }
-    .notice-box li { margin-bottom: 3px; }
 
-    footer { margin-top: 20px; font-size: 13px; color: #ffd269; text-shadow: 0 1px 3px rgba(0,0,0,0.8); position: relative; z-index: 1; }
+    .notice-title { 
+      font-weight: bold; 
+      color: #2b1704; 
+      margin-bottom: 5px; 
+      display: block; 
+    }
+
+    .notice-box ul { 
+      margin: 0; 
+      padding-left: 18px; 
+    }
+
+    .notice-box li { 
+      margin-bottom: 3px; 
+    }
+
+    footer { 
+      margin-top: 20px; 
+      font-size: 13px; 
+      color: #ffd166; 
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9); 
+      position: relative; 
+      z-index: 1; 
+    }
   </style>
 </head>
 <body>
@@ -278,7 +377,8 @@
           });
         }
 
-        const hwColors = ['#ffd269', '#ff8c00', '#d35400', '#2b1704', '#ffffff'];
+        /* 画像のかぼちゃ・キラキラ星に合わせた色の紙吹雪 */
+        const hwColors = ['#ff8c00', '#f39c12', '#ffb703', '#ffffff', '#2b1704'];
 
         fire(0.25, { spread: 26, startVelocity: 55, colors: hwColors });
         fire(0.2, { spread: 60, colors: hwColors });
