@@ -25,29 +25,11 @@
       position: relative;
     }
 
-    /* ★背景画像（jack.jpg）の間隔を空け、段違い配置＆白っぽく超薄めに調整★ */
-    body::after {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      /* 隙間を設けたSVG（ジャックオーランタンを段違い・広めの間隔で配置） */
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><image href="jack.jpg" x="20" y="20" width="55" height="55"/><image href="jack.jpg" x="100" y="100" width="55" height="55"/></svg>');
-      background-repeat: repeat;
-      background-size: 160px 160px;  /* 全体サイズを広げて間隔を確保 */
-      opacity: 0.08;                 /* かなり薄めに透過（8%の濃さ） */
-      filter: brightness(2.5) contrast(0.7); /* 白っぽくハイライトを飛ばして馴染ませる */
-      pointer-events: none;
-      z-index: 0;
-    }
-
     .content { 
       flex: 1; 
       position: relative; 
       z-index: 1; 
-    }
+    } 
     
     .test-badge { 
       background: #ffb703; 
