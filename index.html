@@ -9,11 +9,11 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* 全体の土台となる背景色 */
+    /* 全体の土台となる背景色 (#ffc107) */
     body { 
       font-family: sans-serif; 
       text-align: center; 
-      background-color: #fff8f8;
+      background-color: #ffc107;
       color: #2b1704;
       margin: 0; 
       padding: 20px 20px 40px 20px; 
@@ -23,6 +23,68 @@
       flex-direction: column; 
       overflow-x: hidden; 
       position: relative;
+    }
+
+    /* ★背景画像（jack.jpg）を円形切り抜き＆薄めで四隅に散らす★ */
+    .bg-jack {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.15;            /* 15%のうっすら透明度 */
+      border-radius: 50%;       /* 画像の外側の茶色枠をきれいに丸く切り抜く */
+      object-fit: cover;
+      mix-blend-mode: multiply; /* 背景色（#ffc107）と自然になじませる */
+    }
+
+    /* 配置パターン（少なめ＆角度をつけて散らす） */
+    .bg-jack.top-left {
+      top: -15px;
+      left: -15px;
+      width: 90px;
+      height: 90px;
+      transform: rotate(-15deg);
+    }
+
+    .bg-jack.top-right {
+      top: 30px;
+      right: -10px;
+      width: 75px;
+      height: 75px;
+      transform: rotate(20deg);
+    }
+
+    .bg-jack.mid-left {
+      top: 45%;
+      left: -20px;
+      width: 80px;
+      height: 80px;
+      transform: rotate(10deg);
+    }
+
+    .bg-jack.mid-right {
+      top: 55%;
+      right: -15px;
+      width: 85px;
+      height: 85px;
+      transform: rotate(-25deg);
+    }
+
+    .bg-jack.bottom-left {
+      bottom: 20px;
+      left: 10px;
+      width: 70px;
+      height: 70px;
+      transform: rotate(-10deg);
+      opacity: 0.12;
+    }
+
+    .bg-jack.bottom-right {
+      bottom: -10px;
+      right: 15px;
+      width: 90px;
+      height: 90px;
+      transform: rotate(15deg);
+      opacity: 0.12;
     }
 
     .content { 
@@ -95,7 +157,7 @@
       font-weight: bold; 
       color: #2b1704; 
       margin-bottom: 2px; 
-    }
+    } 
     
     .stamp-mark { 
       font-size: 38px; 
@@ -253,6 +315,14 @@
   </style>
 </head>
 <body>
+
+  <!-- もともとの jack.jpg をそのまま使用 -->
+  <img src="jack.jpg" class="bg-jack top-left" alt="">
+  <img src="jack.jpg" class="bg-jack top-right" alt="">
+  <img src="jack.jpg" class="bg-jack mid-left" alt="">
+  <img src="jack.jpg" class="bg-jack mid-right" alt="">
+  <img src="jack.jpg" class="bg-jack bottom-left" alt="">
+  <img src="jack.jpg" class="bg-jack bottom-right" alt="">
 
   <div class="content">
     <div class="test-badge">⚠️ テストモード動作中（判定スキップ）</div>
