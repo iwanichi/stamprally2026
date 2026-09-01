@@ -128,7 +128,7 @@
       justify-content: center; 
     } 
     
-    /* 台紙枠 */
+    /* 未獲得時の丸い台紙枠 */
     .stamp-spot { 
       background: rgba(255, 248, 240, 0.95); 
       border: 3px dashed #e67e22; 
@@ -145,7 +145,14 @@
       box-sizing: border-box;
     }
 
-    /* ★スタンプ獲得時：枠線・背景・影を完全に消して画像だけにする★ */
+    .spot-title { 
+      font-size: 20px; 
+      font-weight: bold; 
+      color: #2b1704; 
+      margin-bottom: 4px; 
+    } 
+
+    /* ★画像指定があるスタンプを獲得した時：背景枠や文字を消して画像だけを表示★ */
     .stamp-spot.active.has-image { 
       border: none; 
       background: transparent; 
@@ -153,43 +160,24 @@
       padding: 0;
     }
 
-    /* 画像がある場合はタイトル文字を隠す */
-    .stamp-spot.active.has-image .spot-title {
-      display: none;
-    }
-    
-    .spot-title { 
-      font-size: 22px; 
-      font-weight: bold; 
-      color: #2b1704; 
-      margin-bottom: 2px; 
-    } 
-    
-    /* スタンプマーク（テキスト用） */
-    .stamp-mark { 
-      font-size: 38px; 
-      color: #d35400; 
-      font-weight: bold; 
-      display: none; 
-      line-height: 1; 
-      margin: 2px 0; 
-    }
-
-    /* ★スタンプ画像：丸枠（155px）と同じ大きさでいっぱいに表示★ */
+    /* 画像がある場合のスタンプ画像本体（155pxサイズ） */
     .stamp-img {
       width: 155px;
       height: 155px;
       object-fit: contain;
-      display: none;
     }
 
-    .stamp-spot.active .stamp-mark,
-    .stamp-spot.active .stamp-img { 
-      display: block; 
+    /* 画像指定がない（住宅祭など）獲得時の「済」文字 */
+    .stamp-mark { 
+      font-size: 38px; 
+      color: #d35400; 
+      font-weight: bold; 
+      line-height: 1; 
+      margin: 2px 0; 
     }
     
     /* 巨大化 ＋ 着地バウンドアニメーション */
-    .stamp-spot.active .pop-anim {
+    .pop-anim {
       animation: stampMegaBounce 0.7s ease-out;
       z-index: 999;
     }
@@ -402,30 +390,33 @@
         const isStamped = !!collected[spot.id];
         if (isStamped) count++;
 
-        let buttonHtml = '';
-        if (!isStamped) {
-          buttonHtml = `<button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>`;
-        }
-
         const animClass = (spot.id === newlyStampedId) ? 'pop-anim' : '';
 
-        // スタンプ画像の表示切り替え
-        let stampDisplayHtml = '';
-        if (spot.image) {
-          stampDisplayHtml = `<img src="${spot.image}" class="stamp-img ${animClass}" alt="済">`;
+        const card = document.createElement('div');
+
+        if (isStamped) {
+          // ■ スタンプ獲得後
+          if (spot.image) {
+            // 画像指定がある場合（商工祭・農業祭など）：画像のみを表示
+            card.className = `stamp-spot active has-image`;
+            card.innerHTML = `<img src="${spot.image}" class="stamp-img ${animClass}" alt="${spot.name}">`;
+          } else {
+            // 画像指定がない場合（住宅祭など）：タイトルと「済」テキストを表示
+            card.className = `stamp-spot active`;
+            card.innerHTML = `
+              <div class="spot-title">${spot.name}</div>
+              <span class="stamp-mark ${animClass}">済</span>
+            `;
+          }
         } else {
-          stampDisplayHtml = `<span class="stamp-mark ${animClass}">済</span>`;
+          // ■ スタンプ未獲得：タイトルとボタンを表示
+          card.className = `stamp-spot`;
+          card.innerHTML = `
+            <div class="spot-title">${spot.name}</div>
+            <button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>
+          `;
         }
 
-        const hasImageClass = (isStamped && spot.image) ? 'has-image' : '';
-
-        const card = document.createElement('div');
-        card.className = `stamp-spot ${isStamped ? 'active' : ''} ${hasImageClass}`;
-        card.innerHTML = `
-          <div class="spot-title">${spot.name}</div>
-          ${stampDisplayHtml}
-          ${buttonHtml}
-        `;
         grid.appendChild(card);
       });
 
