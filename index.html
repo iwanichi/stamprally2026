@@ -248,9 +248,8 @@
       box-sizing: border-box;
     }
 
-    /* ふわっと登場するフェードインアニメーション */
-    #complete-box.fade-in {
-      display: block;
+    /* ふわっと登場するアニメーション */
+    .fade-in-anim {
       animation: fadeInUp 0.5s ease-out forwards;
     }
 
@@ -468,23 +467,24 @@
       if (count === spots.length) {
         document.getElementById('userCode').innerText = userCode;
 
-        // ★新規獲得時の遅延演出（時差）★
         if (newlyStampedId !== null) {
+          // 最後にスタンプを押した時：0.6秒後に確実に表示＋アニメーション
           completeBox.style.display = 'none';
-          completeBox.classList.remove('fade-in');
+          completeBox.classList.remove('fade-in-anim');
 
-          // スタンプアニメーションが終わる直前（0.6秒後）にコンプリートを表示
           setTimeout(() => {
-            completeBox.classList.add('fade-in');
+            completeBox.style.display = 'block';
+            completeBox.classList.add('fade-in-anim');
             launchConfetti();
           }, 600);
         } else {
-          // すでにコンプリート済みのリロード表示時
+          // ページ読み込み時：すでに達成済みならすぐに表示
           completeBox.style.display = 'block';
         }
       } else {
+        // 未達成時は非表示
         completeBox.style.display = 'none';
-        completeBox.classList.remove('fade-in');
+        completeBox.classList.remove('fade-in-anim');
       }
 
       newlyStampedId = null;
