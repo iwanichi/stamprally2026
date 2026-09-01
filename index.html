@@ -144,7 +144,6 @@
       padding: 8px; 
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
       box-sizing: border-box;
-      overflow: hidden; /* 画像が円からはみ出ないように設定 */
     }
 
     .spot-title { 
@@ -153,18 +152,17 @@
       margin-bottom: 4px; 
     } 
 
-    /* 画像ロゴ用（獲得後に白い円の中に綺麗に収める設定） */
+    /* ★画像ロゴがあるスタンプ（背景を真っ白にして全体をピッタリ表示）★ */
     .stamp-spot.active.has-image { 
-      border: 3px solid #ffffff; /* 獲得後は白い綺麗な実線枠に */
-      background: #ffffff;      /* 背景を完全な白にしてロゴを円形に見せる */
-      padding: 0;
+      border: 3px solid #ffffff; 
+      background: #ffffff;      
+      padding: 10px; /* 余白を入れて丸枠の中に納める */
     }
 
     .stamp-img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* 円全体に綺麗にフィット */
-      border-radius: 50%;
+      object-fit: contain; /* ★ロゴが見切れないよう全体を完全に表示★ */
     }
 
     /* 画像指定がない（住宅祭など）獲得時の「済」文字 */
