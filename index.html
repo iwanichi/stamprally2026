@@ -119,30 +119,12 @@
       font-weight: bold;
     }
 
-    /* 上部に表示するGPS案内バナー */
-    .gps-notice-banner {
-      background: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeeba;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: bold;
-      max-width: 340px;
-      margin: 12px auto 5px auto;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
     .card-container { 
       display: flex; 
       flex-wrap: wrap; 
       gap: 15px; 
       max-width: 360px; 
-      margin: 20px auto; 
+      margin: 20px auto 10px auto; 
       justify-items: center; 
       justify-content: center; 
     } 
@@ -192,7 +174,7 @@
       font-weight: bold; 
       line-height: 1; 
       margin: 2px 0; 
-    }
+    } 
     
     /* 巨大化 ＋ 着地バウンドアニメーション */
     .pop-anim {
@@ -222,6 +204,24 @@
         opacity: 1;
         transform: scale(1) rotate(0deg);
       }
+    }
+
+    /* スタンプ下・リセットボタン上に配置したGPS案内バナー */
+    .gps-notice-banner {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      max-width: 340px;
+      margin: 15px auto 10px auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     button { 
@@ -290,7 +290,7 @@
       color: #ffffff; 
       border: 1px solid rgba(255, 255, 255, 0.3); 
       border-radius: 6px; 
-      margin-top: 20px; 
+      margin-top: 10px; 
       font-size: 12px; 
       padding: 8px 16px; 
       cursor: pointer; 
@@ -351,11 +351,6 @@
     <h1>いちのせき産業まつり<br>イベント間スタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
-    <!-- ★上部バナー：GPS利用＋各台座への接近を案内★ -->
-    <div class="gps-notice-banner">
-      📍 各会場のスタンプ台の近くでGPSをONにして押してください
-    </div>
-
     <div id="complete-box">
       <div class="complete-title">🎉 ご来場ありがとうございます！！</div>
       <div class="complete-desc">
@@ -366,16 +361,22 @@
       <div class="code-display">応募確認コード: <span id="userCode">----</span></div>
     </div>
 
+    <!-- スタンプ台紙 -->
     <div class="card-container" id="stampGrid"></div>
 
+    <!-- ★スタンプの下・リセットボタンの上に移動したGPS案内バナー★ -->
+    <div class="gps-notice-banner">
+      📍 会場近くで位置情報をONにしてください
+    </div>
+
+    <!-- リセットボタン -->
     <button class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
 
     <div class="notice-box">
       <span class="notice-title">【ご注意・お願い】</span>
       <ul>
-        <li><b>各会場のスタンプ台（設置場所）の近くへ移動してから</b>ボタンを押してください。</li>
-        <li>スタンプ取得時は<b>スマホの位置情報（GPS）のアクセス許可</b>が必要です。</li>
-        <li>現地にいるのに取得できない場合は、端末のGPSがONになっているか確認し、ページを再読み込みしてください。</li>
+        <li>スタンプ取得時は<b>位置情報（GPS）のアクセス許可</b>が必要です。</li>
+        <li>取得できない場合は端末のGPSをオンにし、ページを再読み込みしてください。</li>
         <li>イベント終了まで<b>同じブラウザ（SafariやChrome等）</b>でアクセスしてください。</li>
         <li>プライベートモード（シークレットモード）ではスタンプが保存されない場合があります。</li>
         <li>ブラウザの履歴・Webデータを消去するとスタンプもリセットされます。</li>
