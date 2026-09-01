@@ -25,18 +25,17 @@
       position: relative;
     }
 
-    /* ★背景画像（jack.jpg）を円形切り抜き＆薄めで四隅に散らす★ */
+    /* 背景画像（jack.jpg）を円形切り抜き＆薄めで四隅に散らす */
     .bg-jack {
       position: fixed;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.15;            /* 15%のうっすら透明度 */
-      border-radius: 50%;       /* 画像の外側の茶色枠をきれいに丸く切り抜く */
+      opacity: 0.15;
+      border-radius: 50%;
       object-fit: cover;
-      mix-blend-mode: multiply; /* 背景色（#ffc107）と自然になじませる */
+      mix-blend-mode: multiply;
     }
 
-    /* 配置パターン（少なめ＆角度をつけて散らす） */
     .bg-jack.top-left {
       top: -15px;
       left: -15px;
@@ -159,6 +158,7 @@
       margin-bottom: 2px; 
     } 
     
+    /* スタンプマーク（テキスト用） */
     .stamp-mark { 
       font-size: 38px; 
       color: #d35400; 
@@ -168,12 +168,22 @@
       margin: 2px 0; 
     }
 
-    .stamp-spot.active .stamp-mark { 
+    /* スタンプ画像（商工祭.png / 農業祭.png用） */
+    .stamp-img {
+      width: 75px;
+      height: 75px;
+      object-fit: contain;
+      display: none;
+      margin: 2px 0;
+    }
+
+    .stamp-spot.active .stamp-mark,
+    .stamp-spot.active .stamp-img { 
       display: block; 
     }
     
     /* 巨大化 ＋ 着地バウンドアニメーション */
-    .stamp-spot.active .stamp-mark.pop-anim {
+    .stamp-spot.active .pop-anim {
       animation: stampMegaBounce 0.7s ease-out;
       z-index: 999;
     }
@@ -359,9 +369,9 @@
 
   <script>
     const spots = [
-      { id: 'spot1', name: '商工祭' },
-      { id: 'spot2', name: '農業祭' },
-      { id: 'spot3', name: '住宅祭' }
+      { id: 'spot1', name: '商工祭', image: '商工祭.png' },
+      { id: 'spot2', name: '農業祭', image: '農業祭.png' },
+      { id: 'spot3', name: '住宅祭', image: null } /* 画像なし（「済」テキストを表示） */
     ];
 
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
@@ -394,11 +404,19 @@
 
         const animClass = (spot.id === newlyStampedId) ? 'pop-anim' : '';
 
+        // スタンプ画像の表示切り替え（画像指定があれば <img>、なければ 「済」テキスト）
+        let stampDisplayHtml = '';
+        if (spot.image) {
+          stampDisplayHtml = `<img src="${spot.image}" class="stamp-img ${animClass}" alt="済">`;
+        } else {
+          stampDisplayHtml = `<span class="stamp-mark ${animClass}">済</span>`;
+        }
+
         const card = document.createElement('div');
         card.className = `stamp-spot ${isStamped ? 'active' : ''}`;
         card.innerHTML = `
           <div class="spot-title">${spot.name}</div>
-          <span class="stamp-mark ${animClass}">済</span>
+          ${stampDisplayHtml}
           ${buttonHtml}
         `;
         grid.appendChild(card);
