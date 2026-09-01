@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>いちのせき産業まつり イベント間スタンプラリー</title>
 
+  <!-- 紙吹雪（Confetti）用ライブラリの読み込み -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -91,9 +92,9 @@
       z-index: 1; 
     } 
     
-    /* テストモード用バッジ（初期非表示） */
+    /* テストモード用バッジ（常時表示） */
     .test-badge { 
-      display: none;
+      display: inline-block;
       background: #c0392b; 
       color: #ffffff; 
       font-size: 12px; 
@@ -144,7 +145,7 @@
       justify-content: center; 
     } 
     
-    /* 丸い台紙枠（動かさない固定の土台） */
+    /* 丸い台紙枠（固定の土台） */
     .stamp-spot { 
       background: rgba(255, 248, 240, 0.95); 
       border-style: dashed;
@@ -185,7 +186,7 @@
       height: 85%;
       object-fit: contain; 
       background: transparent;
-      mix-blend-mode: multiply; /* 画像の背景が白の場合に透過合成 */
+      mix-blend-mode: multiply;
     }
 
     /* 画像の上に重ねる薄い「済」透かしスタンプ */
@@ -330,14 +331,14 @@
       font-family: monospace; 
     }
 
-    /* リセットボタン（初期状態非表示） */
+    /* リセットボタン（常時表示） */
     .reset-btn { 
-      display: none;
+      display: block;
       background: rgba(43, 23, 4, 0.7); 
       color: #ffffff; 
       border: 1px solid rgba(255, 255, 255, 0.3); 
       border-radius: 6px; 
-      margin: 10px auto 0 auto; 
+      margin: 15px auto 0 auto; 
       font-size: 12px; 
       padding: 8px 16px; 
       cursor: pointer; 
@@ -385,6 +386,7 @@
 </head>
 <body>
 
+  <!-- 背景画像 -->
   <img src="jack.jpg" class="bg-jack top-left" alt="">
   <img src="jack.jpg" class="bg-jack top-right" alt="">
   <img src="jack.jpg" class="bg-jack mid-left" alt="">
@@ -393,10 +395,11 @@
   <img src="jack.jpg" class="bg-jack bottom-right" alt="">
 
   <div class="content">
-    <div id="testBadge" class="test-badge">🔧 検証・テストモード動作中</div>
+    <div class="test-badge">🔧 テストモード動作中</div>
     <h1>いちのせき産業まつり<br>イベント間スタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
     
+    <!-- 開催期間バー -->
     <div class="event-period">
       📅 開催期間：令和8年10月18日(日) 〜 10月25日(日)
     </div>
@@ -411,14 +414,18 @@
       <div class="code-display">応募確認コード: <span id="userCode">----</span></div>
     </div>
 
+    <!-- スタンプ台紙 -->
     <div class="card-container" id="stampGrid"></div>
 
+    <!-- GPS案内バナー -->
     <div class="gps-notice-banner">
       📍 会場近くで位置情報をONにしてください
     </div>
 
-    <button id="resetBtn" class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
+    <!-- リセットボタン（常時表示） -->
+    <button class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
 
+    <!-- ご注意・免責事項 -->
     <div class="notice-box">
       <span class="notice-title">【ご注意・免責事項】</span>
       <ul>
@@ -436,14 +443,6 @@
   </footer>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const isTestMode = urlParams.get('test') === '1';
-
-    if (isTestMode) {
-      document.getElementById('testBadge').style.display = 'inline-block';
-      document.getElementById('resetBtn').style.display = 'block';
-    }
-
     const spots = [
       { id: 'spot1', name: '商工祭', image: '商工祭.png', color: '#e67e22' },
       { id: 'spot2', name: '農業祭', image: '農業祭.png', color: '#27ae60' },
