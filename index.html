@@ -5,16 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>いちのせき産業まつり イベント間スタンプラリー（テストモード）</title>
 
-  <!-- 紙吹雪（Confetti）用ライブラリの読み込み -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* ★お送りいただいた画像を再現したグラデーション＆木目調スタイル★ */
+    /* ★お送りいただいたかぼちゃイラストを薄くタイル配置した背景★ */
     body { 
       font-family: sans-serif; 
       text-align: center; 
-      /* 上部は夕焼けの幻想的なオレンジ〜ブラウン、下部は深い木目調ブラウン */
-      background: radial-gradient(circle at 50% 15%, #ffd269 0%, #ff8c00 25%, #8b3a00 50%, #2b1704 85%);
+      /* ダークブラウンの落ち着いた背景 */
+      background-color: #2d1e18;
       background-attachment: fixed;
       color: #ffffff;
       margin: 0; 
@@ -27,7 +26,7 @@
       position: relative;
     }
 
-    /* ★画像のシルエット（満月・魔女・コウモリ・ボケ光）をCSSで演出★ */
+    /* ★イラスト画像をうっすら（透明度12%）タイル状に敷き詰める設定★ */
     body::before {
       content: "";
       position: fixed;
@@ -37,282 +36,211 @@
       height: 100%;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.18;
-      /* 魔女とコウモリとうっすらとした光のモチーフ */
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="%23ffffff" opacity="0.3"/><path d="M20 30 Q25 25 30 30 Q35 20 40 30 Q30 35 20 30 Z" fill="%23000"/><path d="M60 70 Q65 65 70 70 Q75 60 80 70 Q70 75 60 70 Z" fill="%23000"/></svg>');
+      opacity: 0.12; /* 薄さ（文字がしっかり読める透過度） */
       background-repeat: repeat;
-      background-size: 180px 180px;
-    }
-
-    .content { 
-      flex: 1; 
-      position: relative; 
-      z-index: 1; 
-    }
-    
-    .test-badge { background: #ffc107; color: #2b1704; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    h1 { color: #ffffff; margin-bottom: 5px; margin-top: 5px; font-size: 20px; line-height: 1.3; text-shadow: 0 2px 6px rgba(0,0,0,0.7); }
-    p { color: #ffe6c2; margin-top: 5px; font-size: 14px; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
-
-    /* 3つのカードを綺麗に並べるレイアウト */
-    .card-container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 360px; margin: 20px auto; justify-items: center; justify-content: center; }
-    
-    /* カード枠：画像の木目のテーブルに乗っているようなシックなウッドカード風デザイン */
-    .stamp-spot { 
-      background: rgba(255, 252, 245, 0.95); 
-      border: 3px dashed #8b3a00; 
-      border-radius: 50%; 
-      width: 155px; 
-      height: 155px; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center; 
-      position: relative; 
-      padding: 8px; 
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); 
-      box-sizing: border-box;
-    }
-    .stamp-spot.active { 
-      border: 3px double #d35400; 
-      background: #fff8f0; 
-    }
-    
-    .spot-title { font-size: 22px; font-weight: bold; color: #2b1704; margin-bottom: 2px; }
-    
-    .stamp-mark { font-size: 38px; color: #d35400; font-weight: bold; display: none; line-height: 1; margin: 2px 0; }
-    .stamp-spot.active .stamp-mark { display: block; }
-    
-    /* 巨大化 ＋ 着地バウンドアニメーション */
-    .stamp-spot.active .stamp-mark.pop-anim {
-      animation: stampMegaBounce 0.7s ease-out;
-      z-index: 999;
-    }
-
-    @keyframes stampMegaBounce {
-      0% {
-        opacity: 0;
-        transform: scale(0.1) rotate(-30deg);
-      }
-      40% {
-        opacity: 0.95;
-        transform: scale(4.5) rotate(12deg);
-      }
-      65% {
-        transform: scale(0.85) rotate(-5deg);
-      }
-      78% {
-        transform: scale(1.18) rotate(3deg);
-      }
-      88% {
-        transform: scale(0.95) rotate(-1deg);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-      }
-    }
-
-    button { background: #d35400; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    
-    #complete-box {
-      display: none;
-      background: #ffffff;
-      border: 2px solid #27ae60;
-      border-radius: 12px;
-      padding: 15px 10px;
-      max-width: 350px;
-      margin: 20px auto 10px auto;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-      box-sizing: border-box;
-    }
-    
-    .complete-title { 
-      color: #27ae60; 
-      font-weight: bold; 
-      font-size: 16px; 
-      margin-bottom: 8px; 
-      white-space: nowrap; 
-      letter-spacing: -0.5px; 
-    }
-    
-    .complete-desc { font-size: 12px; color: #333; line-height: 1.4; margin-bottom: 12px; }
-    .apply-btn { 
-      background: #27ae60; 
-      color: white; 
-      font-size: 15px; 
-      font-weight: bold; 
-      padding: 12px 24px; 
-      border-radius: 25px; 
-      border: none; 
-      cursor: pointer; 
-      width: 80%;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
-    .code-display { font-size: 11px; color: #666; margin-top: 8px; font-family: monospace; }
-
-    .reset-btn { background: rgba(0, 0, 0, 0.4); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; margin-top: 20px; font-size: 12px; padding: 8px 16px; cursor: pointer; }
-    
-    .notice-box { 
-      margin: 30px auto 10px auto; 
-      max-width: 350px; 
-      background: rgba(255, 252, 245, 0.95); 
-      border: 1px solid #d8c2b0; 
-      border-radius: 8px; 
-      padding: 12px 15px; 
-      text-align: left; 
-      font-size: 11px; 
-      color: #4a2c11; 
-      line-height: 1.5; 
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-    .notice-title { font-weight: bold; color: #2b1704; margin-bottom: 5px; display: block; }
-    .notice-box ul { margin: 0; padding-left: 18px; }
-    .notice-box li { margin-bottom: 3px; }
-
-    footer { margin-top: 20px; font-size: 13px; color: #ffd269; text-shadow: 0 1px 3px rgba(0,0,0,0.8); position: relative; z-index: 1; }
-  </style>
-</head>
-<body>
-
-  <div class="content">
-    <div class="test-badge">⚠️ テストモード動作中（判定スキップ）</div>
-    <h1>いちのせき産業まつり<br>イベント間スタンプラリー</h1>
-    <p>各会場のボタンを押してスタンプを集めよう！</p>
-
-    <div id="complete-box">
-      <div class="complete-title">🎉 ご来場ありがとうございます！！</div>
-      <div class="complete-desc">
-        全スタンプ達成です！<br>
-        この画面をスクリーンショット撮影の上、下記の応募フォームよりご応募ください。
-      </div>
-      <button class="apply-btn" onclick="openForm()">🎁 景品に応募する</button>
-      <div class="code-display">応募確認コード: <span id="userCode">----</span></div>
-    </div>
-
-    <div class="card-container" id="stampGrid"></div>
-
-    <button class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
-
-    <div class="notice-box">
-      <span class="notice-title">【ご注意・お願い】</span>
-      <ul>
-        <li>イベント終了まで<b>同じブラウザ（SafariやChrome等）</b>でアクセスしてください。</li>
-        <li>プライベートモード（シークレットモード）ではスタンプが保存されない場合があります。</li>
-        <li>ブラウザの履歴・Webデータを消去するとスタンプもリセットされますのでご注意ください。</li>
-      </ul>
-    </div>
-  </div>
-
-  <footer>
-    主催：いちのせき産業まつり実行委員会
-  </footer>
-
-  <script>
-    const spots = [
-      { id: 'spot1', name: '商工祭' },
-      { id: 'spot2', name: '農業祭' },
-      { id: 'spot3', name: '住宅祭' }
-    ];
-
-    let collected = JSON.parse(localStorage.getItem('stampData')) || {};
-    let newlyStampedId = null;
-
-    let userCode = localStorage.getItem('userCode');
-    if (!userCode) {
-      const now = new Date();
-      const dateStr = (now.getMonth() + 1).toString().padStart(2, '0') + now.getDate().toString().padStart(2, '0');
-      const timeStr = now.getHours().toString().padStart(2, '0') + now.getMinutes().toString().padStart(2, '0') + now.getSeconds().toString().padStart(2, '0');
-      const randStr = Math.floor(100 + Math.random() * 900).toString();
-      
-      userCode = `STAMP-${dateStr}-${timeStr}-${randStr}`;
-      localStorage.setItem('userCode', userCode);
-    }
-
-    function render() {
-      const grid = document.getElementById('stampGrid');
-      grid.innerHTML = '';
-      let count = 0;
-
-      spots.forEach(spot => {
-        const isStamped = !!collected[spot.id];
-        if (isStamped) count++;
-
-        let buttonHtml = '';
-        if (!isStamped) {
-          buttonHtml = `<button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>`;
-        }
-
-        const animClass = (spot.id === newlyStampedId) ? 'pop-anim' : '';
-
-        const card = document.createElement('div');
-        card.className = `stamp-spot ${isStamped ? 'active' : ''}`;
-        card.innerHTML = `
-          <div class="spot-title">${spot.name}</div>
-          <span class="stamp-mark ${animClass}">済</span>
-          ${buttonHtml}
-        `;
-        grid.appendChild(card);
-      });
-
-      if (count === spots.length) {
-        document.getElementById('complete-box').style.display = 'block';
-        document.getElementById('userCode').innerText = userCode;
-
-        if (newlyStampedId !== null) {
-          launchConfetti();
-        }
-      } else {
-        document.getElementById('complete-box').style.display = 'none';
-      }
-
-      newlyStampedId = null;
-    }
-
-    function launchConfetti() {
-      if (typeof confetti === 'function') {
-        const count = 200;
-        const defaults = { origin: { y: 0.7 } };
-
-        function fire(particleRatio, opts) {
-          confetti({
-            ...defaults,
-            ...opts,
-            particleCount: Math.floor(count * particleRatio)
-          });
-        }
-
-        /* 画像の夕焼け色に合わせた「黄金・オレンジ・ダークブラウン・イエロー」の紙吹雪 */
-        const hwColors = ['#ffd269', '#ff8c00', '#d35400', '#2b1704', '#ffffff'];
-
-        fire(0.25, { spread: 26, startVelocity: 55, colors: hwColors });
-        fire(0.2, { spread: 60, colors: hwColors });
-        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8, colors: hwColors });
-        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2, colors: hwColors });
-        fire(0.1, { spread: 120, startVelocity: 45, colors: hwColors });
-      }
-    }
-
-    function getStampTest(id) {
-      newlyStampedId = id;
-      collected[id] = true;
-      localStorage.setItem('stampData', JSON.stringify(collected));
-      render();
-    }
-
-    function openForm() {
-      alert("【開発用メッセージ】\n応募フォームのURLが設定されると、ここに移動します。\n\n確認コード: " + userCode + "\nこの画面のスクショを撮影してフォームに送ってもらいます。");
-    }
-
-    function resetStamps() {
-      if (confirm('スタンプを初期化しますか？')) {
-        collected = {};
-        localStorage.removeItem('stampData');
-        render();
-      }
-    }
-
-    render();
-  </script>
-</body>
-</html>
+      background-size: 110px 110px; /* タイル1つの大きさ */
+      /* 画像データを直接CSSに埋め込み */
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAACAASURBVHic7d3/X1T1vf/x1wEEBAQREBBEBAURRBBEEVERRRFEEUVRRBFEEUQURRBEEUUURBRFFFEQUf5ARBERUURB/kAEURARUREQUUQURBFEEAUREURARBBEEAUE/P2+f7ze45m192yYGWbMzMze3/m4D5pZd/bmeuU6M2f24/183x14/PgxAAAAAAAA/7+/8g4AAAAAAAAAZCEAAAAAAAAAkIUAQBYCAFkIAGQhAJCFAGAgAIA1CACUIQCQhQBAlgBAFgIAWQgAZCEAkIUAQBYCAFkIA
+      I3XAwcO1Hl34MCBOs+A/UcAIA0C/s/q
+      /iS+/fv3L333799f92eA9UcAIA0Cvh4C3/v377v4s/4x/n8/y/v9/f3u/4
+      y3v99/f/9f96+4f9vfv1/3
+      +/v8m4u/vv3//v
+      4s/v39
+      /v8
+      /8+/uX9/v4u
+      /3/v///3/v///3/v///3/v
+      /f3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//f+//f+
+      /3+//f+//f+//
