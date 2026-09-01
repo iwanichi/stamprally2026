@@ -162,7 +162,7 @@
     .stamp-img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* ロゴ全体を破線内に納める */
+      object-fit: contain; 
     }
 
     /* 画像指定がない（住宅祭など）獲得時の「済」文字 */
@@ -235,6 +235,7 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
     }
     
+    /* コンプリートボックス（初期状態非表示） */
     #complete-box {
       display: none;
       background: #ffffff;
@@ -245,6 +246,23 @@
       margin: 20px auto 10px auto;
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       box-sizing: border-box;
+    }
+
+    /* ふわっと登場するフェードインアニメーション */
+    #complete-box.fade-in {
+      display: block;
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     .complete-title { 
@@ -418,17 +436,16 @@
         if (isStamped) count++;
 
         const animClass = (spot.id === newlyStampedId) ? 'pop-anim' : '';
-
         const card = document.createElement('div');
 
         if (isStamped) {
           if (spot.image) {
             card.className = `stamp-spot active has-image ${animClass}`;
-            card.style.borderColor = spot.color; /* テーマカラーの破線枠 */
+            card.style.borderColor = spot.color;
             card.innerHTML = `<img src="${spot.image}" class="stamp-img" alt="${spot.name}">`;
           } else {
             card.className = `stamp-spot active ${animClass}`;
-            card.style.borderColor = spot.color; /* テーマカラーの破線枠 */
+            card.style.borderColor = spot.color;
             card.innerHTML = `
               <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
               <span class="stamp-mark">済</span>
@@ -436,7 +453,7 @@
           }
         } else {
           card.className = `stamp-spot`;
-          card.style.borderColor = spot.color; /* テーマカラーの破線枠 */
+          card.style.borderColor = spot.color;
           card.innerHTML = `
             <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
             <button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>
@@ -446,15 +463,28 @@
         grid.appendChild(card);
       });
 
+      const completeBox = document.getElementById('complete-box');
+
       if (count === spots.length) {
-        document.getElementById('complete-box').style.display = 'block';
         document.getElementById('userCode').innerText = userCode;
 
+        // ★新規獲得時の遅延演出（時差）★
         if (newlyStampedId !== null) {
-          launchConfetti();
+          completeBox.style.display = 'none';
+          completeBox.classList.remove('fade-in');
+
+          // スタンプアニメーションが終わる直前（0.6秒後）にコンプリートを表示
+          setTimeout(() => {
+            completeBox.classList.add('fade-in');
+            launchConfetti();
+          }, 600);
+        } else {
+          // すでにコンプリート済みのリロード表示時
+          completeBox.style.display = 'block';
         }
       } else {
-        document.getElementById('complete-box').style.display = 'none';
+        completeBox.style.display = 'none';
+        completeBox.classList.remove('fade-in');
       }
 
       newlyStampedId = null;
