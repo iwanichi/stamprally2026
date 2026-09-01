@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>いちのせき産業まつり イベント間スタンプラリー（テストモード）</title>
+  <title>いちのせき産業まつり イベント間スタンプラリー</title>
 
-  <!-- 紙吹雪（Confetti）用ライブラリの読み込み -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -92,14 +91,15 @@
       z-index: 1; 
     } 
     
+    /* テストモード用バッジ（初期非表示） */
     .test-badge { 
-      background: #2b1704; 
-      color: #ffc107; 
+      display: none;
+      background: #c0392b; 
+      color: #ffffff; 
       font-size: 12px; 
       font-weight: bold; 
       padding: 4px 10px; 
       border-radius: 4px; 
-      display: inline-block; 
       margin-bottom: 10px; 
       box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
     }
@@ -115,8 +115,23 @@
     p { 
       color: #4a2c11; 
       margin-top: 5px; 
+      margin-bottom: 10px;
       font-size: 14px; 
       font-weight: bold;
+    }
+
+    /* イベント開催期間表示 */
+    .event-period {
+      background: #ffffff;
+      color: #2b1704;
+      border: 2px solid #2b1704;
+      border-radius: 20px;
+      padding: 6px 14px;
+      display: inline-block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     }
 
     .card-container { 
@@ -124,12 +139,12 @@
       flex-wrap: wrap; 
       gap: 15px; 
       max-width: 360px; 
-      margin: 20px auto 10px auto; 
+      margin: 15px auto 10px auto; 
       justify-items: center; 
       justify-content: center; 
     } 
     
-    /* 丸い台紙枠（共通基本スタイル） */
+    /* 丸い台紙枠（動かさない固定の土台） */
     .stamp-spot { 
       background: rgba(255, 248, 240, 0.95); 
       border-style: dashed;
@@ -145,6 +160,7 @@
       padding: 8px; 
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
       box-sizing: border-box;
+      overflow: hidden;
     }
 
     .spot-title { 
@@ -153,16 +169,37 @@
       margin-bottom: 4px; 
     } 
 
-    /* 画像ロゴがあるスタンプ獲得時：背景を白にして破線枠を保持 */
-    .stamp-spot.active.has-image { 
-      background: #ffffff;      
-      padding: 10px; 
-    }
-
-    .stamp-img {
+    /* スタンプ画像ラッパー（アニメーション用） */
+    .stamp-inner {
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* 背景の白い四角枠を無くし、透過表示 */
+    .stamp-img {
+      width: 85%;
+      height: 85%;
       object-fit: contain; 
+      background: transparent;
+      mix-blend-mode: multiply; /* 画像の背景が白の場合に透過合成 */
+    }
+
+    /* 画像の上に重ねる薄い「済」透かしスタンプ */
+    .stamp-overlay-mark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg);
+      font-size: 70px;
+      font-weight: bold;
+      color: rgba(211, 84, 0, 0.28);
+      pointer-events: none;
+      line-height: 1;
+      user-select: none;
     }
 
     /* 画像指定がない（住宅祭など）獲得時の「済」文字 */
@@ -174,32 +211,25 @@
       margin: 2px 0; 
     } 
     
-    /* 巨大化 ＋ 着地バウンドアニメーション */
-    .pop-anim {
-      animation: stampMegaBounce 0.7s ease-out;
-      z-index: 999;
+    /* ロゴ/スタンプ部分だけが巨大化＋バウンドして押されるアニメーション */
+    .stamp-inner.pop-anim {
+      animation: stampOnlyBounce 0.65s ease-out;
+      z-index: 10;
     }
 
-    @keyframes stampMegaBounce {
+    @keyframes stampOnlyBounce {
       0% {
         opacity: 0;
-        transform: scale(0.1) rotate(-30deg);
+        transform: scale(3.5) rotate(-20deg);
       }
-      40% {
-        opacity: 0.95;
-        transform: scale(4.5) rotate(12deg);
+      50% {
+        opacity: 1;
+        transform: scale(0.9) rotate(3deg);
       }
-      65% {
-        transform: scale(0.85) rotate(-5deg);
-      }
-      78% {
-        transform: scale(1.18) rotate(3deg);
-      }
-      88% {
-        transform: scale(0.95) rotate(-1deg);
+      75% {
+        transform: scale(1.1) rotate(-1deg);
       }
       100% {
-        opacity: 1;
         transform: scale(1) rotate(0deg);
       }
     }
@@ -300,12 +330,14 @@
       font-family: monospace; 
     }
 
+    /* リセットボタン（初期状態非表示） */
     .reset-btn { 
+      display: none;
       background: rgba(43, 23, 4, 0.7); 
       color: #ffffff; 
       border: 1px solid rgba(255, 255, 255, 0.3); 
       border-radius: 6px; 
-      margin-top: 10px; 
+      margin: 10px auto 0 auto; 
       font-size: 12px; 
       padding: 8px 16px; 
       cursor: pointer; 
@@ -353,7 +385,6 @@
 </head>
 <body>
 
-  <!-- 背景画像 -->
   <img src="jack.jpg" class="bg-jack top-left" alt="">
   <img src="jack.jpg" class="bg-jack top-right" alt="">
   <img src="jack.jpg" class="bg-jack mid-left" alt="">
@@ -362,9 +393,13 @@
   <img src="jack.jpg" class="bg-jack bottom-right" alt="">
 
   <div class="content">
-    <div class="test-badge">⚠️ テストモード動作中（判定スキップ）</div>
+    <div id="testBadge" class="test-badge">🔧 検証・テストモード動作中</div>
     <h1>いちのせき産業まつり<br>イベント間スタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
+    
+    <div class="event-period">
+      📅 開催期間：令和8年10月18日(日) 〜 10月25日(日)
+    </div>
 
     <div id="complete-box">
       <div class="complete-title">🎉 ご来場ありがとうございます！！</div>
@@ -376,18 +411,14 @@
       <div class="code-display">応募確認コード: <span id="userCode">----</span></div>
     </div>
 
-    <!-- スタンプ台紙 -->
     <div class="card-container" id="stampGrid"></div>
 
-    <!-- GPS案内バナー -->
     <div class="gps-notice-banner">
       📍 会場近くで位置情報をONにしてください
     </div>
 
-    <!-- リセットボタン -->
-    <button class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
+    <button id="resetBtn" class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
 
-    <!-- ご注意・免責事項 -->
     <div class="notice-box">
       <span class="notice-title">【ご注意・免責事項】</span>
       <ul>
@@ -405,6 +436,14 @@
   </footer>
 
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const isTestMode = urlParams.get('test') === '1';
+
+    if (isTestMode) {
+      document.getElementById('testBadge').style.display = 'inline-block';
+      document.getElementById('resetBtn').style.display = 'block';
+    }
+
     const spots = [
       { id: 'spot1', name: '商工祭', image: '商工祭.png', color: '#e67e22' },
       { id: 'spot2', name: '農業祭', image: '農業祭.png', color: '#27ae60' },
@@ -416,6 +455,10 @@
 
     let userCode = localStorage.getItem('userCode');
     if (!userCode) {
+      generateUserCode();
+    }
+
+    function generateUserCode() {
       const now = new Date();
       const dateStr = (now.getMonth() + 1).toString().padStart(2, '0') + now.getDate().toString().padStart(2, '0');
       const timeStr = now.getHours().toString().padStart(2, '0') + now.getMinutes().toString().padStart(2, '0') + now.getSeconds().toString().padStart(2, '0');
@@ -436,23 +479,26 @@
 
         const animClass = (spot.id === newlyStampedId) ? 'pop-anim' : '';
         const card = document.createElement('div');
+        card.className = `stamp-spot`;
+        card.style.borderColor = spot.color;
 
         if (isStamped) {
           if (spot.image) {
-            card.className = `stamp-spot active has-image ${animClass}`;
-            card.style.borderColor = spot.color;
-            card.innerHTML = `<img src="${spot.image}" class="stamp-img" alt="${spot.name}">`;
-          } else {
-            card.className = `stamp-spot active ${animClass}`;
-            card.style.borderColor = spot.color;
             card.innerHTML = `
-              <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
-              <span class="stamp-mark">済</span>
+              <div class="stamp-inner ${animClass}">
+                <img src="${spot.image}" class="stamp-img" alt="${spot.name}">
+                <div class="stamp-overlay-mark">済</div>
+              </div>
+            `;
+          } else {
+            card.innerHTML = `
+              <div class="stamp-inner ${animClass}" style="flex-direction: column;">
+                <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
+                <span class="stamp-mark">済</span>
+              </div>
             `;
           }
         } else {
-          card.className = `stamp-spot`;
-          card.style.borderColor = spot.color;
           card.innerHTML = `
             <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
             <button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>
@@ -468,7 +514,6 @@
         document.getElementById('userCode').innerText = userCode;
 
         if (newlyStampedId !== null) {
-          // 最後にスタンプを押した時：0.6秒後に確実に表示＋アニメーション
           completeBox.style.display = 'none';
           completeBox.classList.remove('fade-in-anim');
 
@@ -478,11 +523,9 @@
             launchConfetti();
           }, 600);
         } else {
-          // ページ読み込み時：すでに達成済みならすぐに表示
           completeBox.style.display = 'block';
         }
       } else {
-        // 未達成時は非表示
         completeBox.style.display = 'none';
         completeBox.classList.remove('fade-in-anim');
       }
@@ -525,9 +568,11 @@
     }
 
     function resetStamps() {
-      if (confirm('スタンプを初期化しますか？')) {
+      if (confirm('スタンプと確認コードをリセットしますか？')) {
         collected = {};
         localStorage.removeItem('stampData');
+        localStorage.removeItem('userCode');
+        generateUserCode();
         render();
       }
     }
