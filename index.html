@@ -9,10 +9,14 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
+    /* ★ハロウィーン風の落ち着いた背景設定★ */
     body { 
       font-family: sans-serif; 
       text-align: center; 
-      background-color: #f4f6f8; 
+      /* ダークパープル〜ネイビーのシックな夜空風グラデーション */
+      background: linear-gradient(135deg, #1e1b2e 0%, #2a1f3d 50%, #171326 100%);
+      background-attachment: fixed;
+      color: #f0f0f0;
       margin: 0; 
       padding: 20px 20px 40px 20px; 
       min-height: 100vh; 
@@ -20,21 +24,43 @@
       display: flex; 
       flex-direction: column; 
       overflow-x: hidden; 
+      position: relative;
     }
-    .content { flex: 1; }
+
+    /* ★控えめなハロウィーンのバックグラウンドイラスト（透過SVG）★ */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.12; /* 主張しすぎないうっすらとした透過度 */
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100"><circle cx="25" cy="25" r="12" fill="%23fff"/><path d="M10 80 Q20 70 30 80 Q40 70 50 80 Q50 95 30 95 Q10 95 10 80 Z" fill="%23ff9800"/><path d="M70 30 Q75 25 80 30 Q85 20 90 30 Q80 35 70 30 Z" fill="%23fff"/><path d="M15 40 Q20 35 25 40 Q30 30 35 40 Q25 45 15 40 Z" fill="%23fff"/></svg>');
+      background-repeat: repeat;
+      background-size: 220px 220px;
+    }
+
+    .content { 
+      flex: 1; 
+      position: relative; 
+      z-index: 1; 
+    }
     
     .test-badge { background: #ffc107; color: #333; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
-    h1 { color: #333; margin-bottom: 5px; margin-top: 5px; font-size: 20px; line-height: 1.3; }
-    p { color: #666; margin-top: 5px; font-size: 14px; }
+    h1 { color: #ffffff; margin-bottom: 5px; margin-top: 5px; font-size: 20px; line-height: 1.3; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    p { color: #d0c8e0; margin-top: 5px; font-size: 14px; }
 
     /* 3つのカードを綺麗に並べるレイアウト */
     .card-container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 360px; margin: 20px auto; justify-items: center; justify-content: center; }
     
     .stamp-spot { 
-      background: #fff; 
-      border: 2px dashed #bbb; 
+      background: rgba(255, 255, 255, 0.95); 
+      border: 2px dashed #9b8ab8; 
       border-radius: 50%; 
-      width: 155px; /* イベント名拡大に合わせて枠サイズをほんの少し拡大 */
+      width: 155px; 
       height: 155px; 
       display: flex; 
       flex-direction: column; 
@@ -42,7 +68,7 @@
       justify-content: center; 
       position: relative; 
       padding: 8px; 
-      box-shadow: 0 3px 6px rgba(0,0,0,0.06); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
       box-sizing: border-box;
     }
     .stamp-spot.active { 
@@ -50,8 +76,7 @@
       background: #fff8f8; 
     }
     
-    /* ★イベント名をさらに大きく（22px）変更★ */
-    .spot-title { font-size: 22px; font-weight: bold; color: #333; margin-bottom: 2px; }
+    .spot-title { font-size: 22px; font-weight: bold; color: #222; margin-bottom: 2px; }
     
     .stamp-mark { font-size: 38px; color: #ff6b6b; font-weight: bold; display: none; line-height: 1; margin: 2px 0; }
     .stamp-spot.active .stamp-mark { display: block; }
@@ -86,17 +111,17 @@
       }
     }
 
-    button { background: #007bff; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; }
+    button { background: #ff9800; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; margin-top: 4px; cursor: pointer; font-weight: bold; }
     
     #complete-box {
       display: none;
-      background: #e8f5e9;
+      background: #ffffff;
       border: 2px solid #28a745;
       border-radius: 12px;
       padding: 15px 10px;
       max-width: 350px;
       margin: 20px auto 10px auto;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       box-sizing: border-box;
     }
     
@@ -124,26 +149,26 @@
     }
     .code-display { font-size: 11px; color: #666; margin-top: 8px; font-family: monospace; }
 
-    .reset-btn { background: #6c757d; color: #fff; border: none; border-radius: 6px; margin-top: 20px; font-size: 12px; padding: 8px 16px; cursor: pointer; }
+    .reset-btn { background: #5a4b75; color: #fff; border: none; border-radius: 6px; margin-top: 20px; font-size: 12px; padding: 8px 16px; cursor: pointer; }
     
     .notice-box { 
       margin: 30px auto 10px auto; 
       max-width: 350px; 
-      background: #ffffff; 
-      border: 1px solid #e0e0e0; 
+      background: rgba(255, 255, 255, 0.95); 
+      border: 1px solid #d0c8e0; 
       border-radius: 8px; 
       padding: 12px 15px; 
       text-align: left; 
       font-size: 11px; 
-      color: #666; 
+      color: #444; 
       line-height: 1.5; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    .notice-title { font-weight: bold; color: #333; margin-bottom: 5px; display: block; }
+    .notice-title { font-weight: bold; color: #222; margin-bottom: 5px; display: block; }
     .notice-box ul { margin: 0; padding-left: 18px; }
     .notice-box li { margin-bottom: 3px; }
 
-    footer { margin-top: 20px; font-size: 13px; color: #666; }
+    footer { margin-top: 20px; font-size: 13px; color: #b0a5c5; relative; z-index: 1; }
   </style>
 </head>
 <body>
@@ -154,7 +179,6 @@
     <p>各会場のボタンを押してスタンプを集めよう！</p>
 
     <div id="complete-box">
-      <!-- ★「ご来場ありがとうございます！！」に変更★ -->
       <div class="complete-title">🎉 ご来場ありがとうございます！！</div>
       <div class="complete-desc">
         全スタンプ達成です！<br>
@@ -256,11 +280,14 @@
           });
         }
 
-        fire(0.25, { spread: 26, startVelocity: 55 });
-        fire(0.2, { spread: 60 });
-        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-        fire(0.1, { spread: 120, startVelocity: 45 });
+        /* ハロウィーンに合わせた「オレンジ・紫・ゴールド・ホワイト」の紙吹雪カラー */
+        const hwColors = ['#ff9800', '#9c27b0', '#ffd700', '#ffffff'];
+
+        fire(0.25, { spread: 26, startVelocity: 55, colors: hwColors });
+        fire(0.2, { spread: 60, colors: hwColors });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8, colors: hwColors });
+        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2, colors: hwColors });
+        fire(0.1, { spread: 120, startVelocity: 45, colors: hwColors });
       }
     }
 
