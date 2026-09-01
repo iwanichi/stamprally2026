@@ -148,7 +148,6 @@
     .spot-title { 
       font-size: 20px; 
       font-weight: bold; 
-      color: #2b1704; 
       margin-bottom: 4px; 
     } 
 
@@ -361,10 +360,11 @@
   </footer>
 
   <script>
+    // colorプロパティを追加して文字色を指定（商工祭：オレンジ / 農業祭：緑）
     const spots = [
-      { id: 'spot1', name: '商工祭', image: '商工祭.png' },
-      { id: 'spot2', name: '農業祭', image: '農業祭.png' },
-      { id: 'spot3', name: '住宅祭', image: null }
+      { id: 'spot1', name: '商工祭', image: '商工祭.png', color: '#e67e22' },
+      { id: 'spot2', name: '農業祭', image: '農業祭.png', color: '#27ae60' },
+      { id: 'spot3', name: '住宅祭', image: null, color: '#2b1704' }
     ];
 
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
@@ -404,15 +404,15 @@
             // 画像指定がない場合（住宅祭など）：タイトルと「済」テキストを表示
             card.className = `stamp-spot active`;
             card.innerHTML = `
-              <div class="spot-title">${spot.name}</div>
+              <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
               <span class="stamp-mark ${animClass}">済</span>
             `;
           }
         } else {
-          // ■ スタンプ未獲得：タイトルとボタンを表示
+          // ■ スタンプ未獲得：タイトル（指定文字色）とボタンを表示
           card.className = `stamp-spot`;
           card.innerHTML = `
-            <div class="spot-title">${spot.name}</div>
+            <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
             <button onclick="getStampTest('${spot.id}')">スタンプ獲得</button>
           `;
         }
