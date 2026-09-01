@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>いちのせき産業まつり イベント間スタンプラリー（テストモード）</title>
 
+  <!-- 紙吹雪（Confetti）用ライブラリの読み込み -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -116,6 +117,24 @@
       margin-top: 5px; 
       font-size: 14px; 
       font-weight: bold;
+    }
+
+    /* 上部に表示するGPS案内バナー */
+    .gps-notice-banner {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      max-width: 340px;
+      margin: 12px auto 5px auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .card-container { 
@@ -319,6 +338,7 @@
 </head>
 <body>
 
+  <!-- 背景画像 -->
   <img src="jack.jpg" class="bg-jack top-left" alt="">
   <img src="jack.jpg" class="bg-jack top-right" alt="">
   <img src="jack.jpg" class="bg-jack mid-left" alt="">
@@ -330,6 +350,11 @@
     <div class="test-badge">⚠️ テストモード動作中（判定スキップ）</div>
     <h1>いちのせき産業まつり<br>イベント間スタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
+
+    <!-- ★目立たせるためのGPS案内バナー★ -->
+    <div class="gps-notice-banner">
+      📍 スマホの位置情報（GPS）をONにしてご参加ください
+    </div>
 
     <div id="complete-box">
       <div class="complete-title">🎉 ご来場ありがとうございます！！</div>
@@ -348,9 +373,11 @@
     <div class="notice-box">
       <span class="notice-title">【ご注意・お願い】</span>
       <ul>
+        <li>スタンプ取得時は<b>位置情報（GPS）のアクセス許可</b>が必要です。</li>
+        <li>取得できない場合は端末のGPSをオンにし、ページを再読み込みしてください。</li>
         <li>イベント終了まで<b>同じブラウザ（SafariやChrome等）</b>でアクセスしてください。</li>
         <li>プライベートモード（シークレットモード）ではスタンプが保存されない場合があります。</li>
-        <li>ブラウザの履歴・Webデータを消去するとスタンプもリセットされますのでご注意ください。</li>
+        <li>ブラウザの履歴・Webデータを消去するとスタンプもリセットされます。</li>
       </ul>
     </div>
   </div>
@@ -360,7 +387,6 @@
   </footer>
 
   <script>
-    // colorプロパティを追加して文字色を指定（商工祭：オレンジ / 農業祭：緑）
     const spots = [
       { id: 'spot1', name: '商工祭', image: '商工祭.png', color: '#e67e22' },
       { id: 'spot2', name: '農業祭', image: '農業祭.png', color: '#27ae60' },
@@ -395,13 +421,10 @@
         const card = document.createElement('div');
 
         if (isStamped) {
-          // ■ スタンプ獲得後
           if (spot.image) {
-            // 画像指定がある場合（商工祭・農業祭など）：画像のみを表示
             card.className = `stamp-spot active has-image`;
             card.innerHTML = `<img src="${spot.image}" class="stamp-img ${animClass}" alt="${spot.name}">`;
           } else {
-            // 画像指定がない場合（住宅祭など）：タイトルと「済」テキストを表示
             card.className = `stamp-spot active`;
             card.innerHTML = `
               <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
@@ -409,7 +432,6 @@
             `;
           }
         } else {
-          // ■ スタンプ未獲得：タイトル（指定文字色）とボタンを表示
           card.className = `stamp-spot`;
           card.innerHTML = `
             <div class="spot-title" style="color: ${spot.color};">${spot.name}</div>
