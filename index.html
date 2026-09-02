@@ -170,7 +170,7 @@
       margin-bottom: 4px; 
     } 
 
-    /* スタンプ画像ラッパー（アニメーション用） */
+    /* スタンプ画像ラッパー */
     .stamp-inner {
       width: 100%;
       height: 100%;
@@ -180,7 +180,7 @@
       position: relative;
     }
 
-    /* ロゴ画像表示（背景色と同化） */
+    /* ロゴ画像表示 */
     .stamp-img {
       width: 90%;
       height: 90%;
@@ -210,26 +210,48 @@
       margin: 2px 0; 
     } 
     
-    /* ロゴ/スタンプ部分だけが巨大化＋バウンドして押されるアニメーション */
-    .stamp-inner.pop-anim {
-      animation: stampOnlyBounce 0.65s ease-out;
-      z-index: 10;
+    /* === 2段階スタンプアニメーション === */
+    
+    /* 1. ロゴの着地アニメーション */
+    .pop-anim .stamp-img,
+    .pop-anim .spot-title {
+      animation: logoLanding 0.4s ease-out forwards;
     }
 
-    @keyframes stampOnlyBounce {
+    @keyframes logoLanding {
       0% {
         opacity: 0;
-        transform: scale(3.5) rotate(-20deg);
+        transform: scale(3) rotate(-15deg);
       }
-      50% {
+      70% {
         opacity: 1;
-        transform: scale(0.9) rotate(3deg);
-      }
-      75% {
-        transform: scale(1.1) rotate(-1deg);
+        transform: scale(0.95) rotate(2deg);
       }
       100% {
+        opacity: 1;
         transform: scale(1) rotate(0deg);
+      }
+    }
+
+    /* 2. 「済」スタンプの追打アニメーション（ロゴ着地後に作動） */
+    .pop-anim .stamp-overlay-mark,
+    .pop-anim .stamp-mark {
+      opacity: 0;
+      animation: stampOverlayDrop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.35s forwards;
+    }
+
+    @keyframes stampOverlayDrop {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(3.5) rotate(-30deg);
+      }
+      70% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.85) rotate(-10deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(-12deg);
       }
     }
 
@@ -340,7 +362,7 @@
       font-size: 12px; 
       padding: 8px 16px; 
       cursor: pointer; 
-    }
+    } 
     
     .notice-box { 
       margin: 30px auto 10px auto; 
@@ -514,11 +536,12 @@
           completeBox.style.display = 'none';
           completeBox.classList.remove('fade-in-anim');
 
+          // 2段階アニメーション終了（約0.8秒）に合わせてコンプリート表示＋紙吹雪
           setTimeout(() => {
             completeBox.style.display = 'block';
             completeBox.classList.add('fade-in-anim');
             launchConfetti();
-          }, 600);
+          }, 850);
         } else {
           completeBox.style.display = 'block';
         }
