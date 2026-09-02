@@ -145,9 +145,9 @@
       justify-content: center; 
     } 
     
-    /* 丸い台紙枠（固定の土台） */
+    /* 丸い台紙枠（完全な白色 #ffffff に統一） */
     .stamp-spot { 
-      background: rgba(255, 248, 240, 0.95); 
+      background: #ffffff; 
       border-style: dashed;
       border-width: 3px;
       border-radius: 50%; 
@@ -180,13 +180,11 @@
       position: relative;
     }
 
-    /* 背景の白い四角枠を無くし、透過表示 */
+    /* ロゴ画像表示（背景色と同化） */
     .stamp-img {
-      width: 85%;
-      height: 85%;
+      width: 90%;
+      height: 90%;
       object-fit: contain; 
-      background: transparent;
-      mix-blend-mode: multiply;
     }
 
     /* 画像の上に重ねる薄い「済」透かしスタンプ */
