@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>いちのせき産業まつり イベント間スタンプラリー</title>
 
+  <!-- 紙吹雪（Confetti）用ライブラリの読み込み -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -415,6 +416,7 @@
 </head>
 <body>
 
+  <!-- 背景画像 -->
   <img src="jack.jpg" class="bg-jack top-left" alt="">
   <img src="jack.jpg" class="bg-jack top-right" alt="">
   <img src="jack.jpg" class="bg-jack mid-left" alt="">
@@ -427,6 +429,7 @@
     <h1>いちのせき産業まつり<br>イベント間スタンプラリー</h1>
     <p>各会場のボタンを押してスタンプを集めよう！</p>
     
+    <!-- 開催期間バー -->
     <div class="event-period">
       📅 開催期間：令和8年10月18日(日) 〜 10月25日(日)
     </div>
@@ -441,14 +444,18 @@
       <div class="code-display">応募確認コード: <span id="userCode">----</span></div>
     </div>
 
+    <!-- スタンプ台紙 -->
     <div class="card-container" id="stampGrid"></div>
 
+    <!-- GPS案内バナー -->
     <div class="gps-notice-banner">
       📍 会場近くで位置情報をONにしてください
     </div>
 
+    <!-- リセットボタン（常時表示） -->
     <button class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
 
+    <!-- ご注意・免責事項 -->
     <div class="notice-box">
       <span class="notice-title">【ご注意・免責事項】</span>
       <ul>
@@ -469,7 +476,7 @@
     const spots = [
       { id: 'spot1', name: '商工祭', image: '商工祭.png', color: '#e67e22' },
       { id: 'spot2', name: '農業祭', image: '農業祭.png', color: '#27ae60' },
-      { id: 'spot3', name: '住宅祭', image: null, color: '#2b1704' }
+      { id: 'spot3', name: '住宅祭', image: '住宅祭.png', color: '#2b1704' }
     ];
 
     let collected = JSON.parse(localStorage.getItem('stampData')) || {};
