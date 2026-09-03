@@ -204,26 +204,26 @@
       z-index: 100;
     }
 
-    /* === 着地時の台紙枠の震え（インパクト演出） === */
+    /* === 着地時の台紙枠の震え（インパクト演出を少し抑える） === */
     .stamp-spot.shake-anim {
-      animation: spotImpactShake 0.25s ease-out 0.35s;
+      animation: spotImpactShake 0.2s ease-out 0.25s;
     }
 
     @keyframes spotImpactShake {
       0% { transform: scale(1) translate(0, 0); }
-      20% { transform: scale(0.96) translate(-3px, 3px); }
-      40% { transform: scale(1.02) translate(3px, -2px); }
-      60% { transform: scale(0.99) translate(-2px, 1px); }
-      80% { transform: scale(1.01) translate(1px, -1px); }
+      20% { transform: scale(0.98) translate(-1px, 1px); }
+      40% { transform: scale(1.01) translate(1px, -1px); }
+      60% { transform: scale(0.99) translate(-1px, 0.5px); }
+      80% { transform: scale(1) translate(0.5px, -0.5px); }
       100% { transform: scale(1) translate(0, 0); }
     }
     
-    /* === 2段階超ダイナミックアニメーション === */
+    /* === 2段階「ぽんっ」アニメーション === */
     
-    /* 1. ロゴ/タイトル名の着地アニメーション */
+    /* 1. ロゴ/タイトル名の着地アニメーション（少し速く） */
     .pop-anim .stamp-img,
     .pop-anim .text-landing-title {
-      animation: logoLanding 0.35s ease-out forwards;
+      animation: logoLanding 0.3s ease-out forwards;
     }
 
     @keyframes logoLanding {
@@ -241,26 +241,31 @@
       }
     }
 
-    /* 2. 「済」スタンプの超巨大化インパクトドスン演出 */
+    /* 2. 「済」スタンプの「ぽんっ」インパクト演出 */
     .pop-anim .stamp-overlay-mark {
       opacity: 0;
-      animation: megaStampDrop 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) 0.3s forwards;
+      /* Cubic-bezierをキレのあるものに変更、巨大化も少し抑える */
+      animation: ponStampDrop 0.3s cubic-bezier(0.2, 1.2, 0.4, 1.2) 0.25s forwards;
     }
 
-    @keyframes megaStampDrop {
+    @keyframes ponStampDrop {
       0% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(8.5) rotate(-35deg);
+        /* はみ出し感を残しつつ、前よりは抑える */
+        transform: translate(-50%, -50%) scale(6.0) rotate(-25deg);
       }
       60% {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(0.85) rotate(-8deg);
+        /* 「ぽんっ」と着地する瞬間 */
+        transform: translate(-50%, -50%) scale(0.92) rotate(-8deg);
       }
       80% {
-        transform: translate(-50%, -50%) scale(1.1) rotate(-14deg);
+        /* バウンドも小さくキレよく */
+        transform: translate(-50%, -50%) scale(1.05) rotate(-14deg);
       }
       100% {
         opacity: 1;
+        /* 着地完了 */
         transform: translate(-50%, -50%) scale(1) rotate(-12deg);
       }
     }
@@ -459,11 +464,11 @@
     <div class="notice-box">
       <span class="notice-title">【ご注意・免責事項】</span>
       <ul>
-        <li>スタンプ取得時は<b>位置情報（GPS）のアクセス許可</b>が必要です。</li>
-        <li>イベント終了まで<b>同じブラウザ（SafariやChrome等）</b>でアクセスしてください。</li>
-        <li>プライベートモード（シークレットモード）のご利用や、ブラウザの履歴・Webデータを消去するとスタンプも消去されます。</li>
-        <li><b>誤操作やデータ消去等により失われたスタンプの再発行・復元はできません</b>のでご注意ください。</li>
-        <li>ご利用の端末、OSのバージョン、または通信環境によっては正常にスタンプが獲得できない場合があります。</li>
+        <li>スタンプ取得時は<b>位置情報（GPS）のアクセス許可</b>が必要です.</li>
+        <li>イベント終了まで<b>同じブラウザ（SafariやChrome等）</b>でアクセスしてください.</li>
+        <li>プライベートモード（シークレットモード）のご利用や、ブラウザの履歴・Webデータを消去するとスタンプも消去されます.</li>
+        <li><b>誤操作やデータ消去等により失われたスタンプの再発行・復元はできません</b>のでご注意ください.</li>
+        <li>ご利用の端末、OSのバージョン、または通信環境によっては正常にスタンプが獲得できない場合があります.</li>
       </ul>
     </div>
   </div>
@@ -553,7 +558,7 @@
             completeBox.style.display = 'block';
             completeBox.classList.add('fade-in-anim');
             launchConfetti();
-          }, 850);
+          }, 650); // アニメーションの高速化に合わせて完了表示も早める
         } else {
           completeBox.style.display = 'block';
         }
