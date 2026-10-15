@@ -270,14 +270,14 @@
       <div class="complete-title">🎉 ご来場ありがとうございます！！</div>
       <div class="complete-desc">
         全スタンプ達成です！<br>
-        この画面をスクリーンショット撮影の上、下記の応募フォームよりご応募ください。
+        下記の応募フォームよりご応募ください。
       </div>
       <a href="https://forms.gle/4zARd1k9g18x56ZCA" target="_blank" class="apply-btn">🎁 景品に応募する</a>
     </div>
 
     <div class="card-container" id="stampGrid"></div>
 
-    <!-- リセットボタン：DEBUG_MODEがfalseのときはHTMLから完全に非表示（style="display:none;"）にします -->
+    <!-- リセットボタン：DEBUG_MODEがfalseのときはHTMLから完全に非表示にします -->
     <button id="resetBtn" class="reset-btn" onclick="resetStamps()">スタンプをリセット</button>
 
     <div class="notice-box">
@@ -298,9 +298,9 @@
   <script>
     // ★ true にするとテストモード（いつでも押せる ＋ リセットボタンが表示される）
     // ★ false にすると本番モード（開催日のみ押せる ＋ リセットボタンが消える）
-    const DEBUG_MODE = false; 
+    const DEBUG_MODE = true; 
 
-    // 【超重要】本番モードのときはリセットボタンのHTML要素自体をここで完全に消去します
+    // 本番モードのときはリセットボタンのHTML要素自体をここで完全に消去します
     if (!DEBUG_MODE) {
       const btn = document.getElementById('resetBtn');
       if (btn) btn.remove();
@@ -441,7 +441,7 @@
     }
 
     function resetStamps() {
-      if (confirm('スタンプとリセットしますか？')) {
+      if (confirm('スタンプをリセットしますか？')) {
         collected = {};
         localStorage.removeItem('stampData');
         render();
